@@ -1,0 +1,32 @@
+﻿services:
+  - type: web
+    name: nexbytees-backend
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install && npm run prisma:generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: API_PREFIX
+        value: /api/v1
+      - key: CORS_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: NEWS_PROVIDER
+        value: newsapi
+      - key: NEWS_API_KEY
+        sync: false
+      - key: UPLOAD_STORAGE_PROVIDER
+        value: local

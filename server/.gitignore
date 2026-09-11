@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# TypeScript build output
+dist/
+
+# Environment files & secrets (DO NOT COMMIT SECRETS)
+.env
+.env.*
+*.env
+!.env.example
+
+# Local uploads folder
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Test coverage
+coverage/
+
+# OS and Editor files
+.DS_Store
+.vscode/
+.idea/

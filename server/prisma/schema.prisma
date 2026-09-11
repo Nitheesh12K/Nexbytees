@@ -1,0 +1,234 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  EDITOR
+  ADMIN
+}
+
+enum NewsDomain {
+  AI
+  CYBERSECURITY
+  ROBOTICS
+  QUANTUM
+  SPACE
+  GADGETS
+  SOFTWARE
+  CLOUD
+  SEMICONDUCTORS
+  STARTUPS
+  OTHER
+}
+
+enum NewsStatus {
+  DRAFT
+  PENDING
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum UploadStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  NEWS
+  LIKE
+  COMMENT
+  FOLLOW
+  UPLOAD
+  SYSTEM
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  profileImage String?
+  bio          String?
+  techInterests String[] @default([])
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  articles      NewsArticle[]
+  savedStories  SavedStory[]
+  uploads       UserUpload[]
+  likes         Like[]
+  comments      Comment[]
+  followers     Follow[]          @relation("FollowingUsers")
+  following     Follow[]          @relation("FollowerUsers")
+  notifications Notification[]
+  preferences   UserPreferences?
+  refreshTokens RefreshToken[]
+
+  @@index([role])
+}
+
+model NewsArticle {
+  id            String     @id @default(uuid())
+  title         String
+  slug          String     @unique
+  description   String
+  content       String
+  imageUrl      String
+  sourceName    String
+  sourceUrl     String
+  authorId      String?
+  author        User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  domain        NewsDomain
+  tags          String[]   @default([])
+  status        NewsStatus @default(PUBLISHED)
+  publishedAt   DateTime   @default(now())
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  viewCount     Int        @default(0)
+  saveCount     Int        @default(0)
+  shareCount    Int        @default(0)
+  trendingScore Float      @default(0)
+
+  // Relations
+  savedBy  SavedStory[]
+  likes    Like[]
+  comments Comment[]
+
+  @@index([status, domain])
+  @@index([status, trendingScore])
+  @@index([status, publishedAt])
+  @@index([authorId])
+}
+
+model SavedStory {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  newsArticleId String
+  newsArticle   NewsArticle @relation(fields: [newsArticleId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([userId, newsArticleId])
+  @@index([userId])
+  @@index([newsArticleId])
+}
+
+model UserUpload {
+  id              String       @id @default(uuid())
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  description     String
+  content         String
+  imageUrl        String
+  sourceName      String
+  sourceUrl       String
+  domain          NewsDomain
+  tags            String[]     @default([])
+  status          UploadStatus @default(PENDING)
+  rejectionReason String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([status])
+  @@index([userId])
+}
+
+model Like {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  newsArticleId String
+  newsArticle   NewsArticle @relation(fields: [newsArticleId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([userId, newsArticleId])
+  @@index([userId])
+  @@index([newsArticleId])
+}
+
+model Comment {
+  id              String      @id @default(uuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  newsArticleId   String
+  newsArticle     NewsArticle @relation(fields: [newsArticleId], references: [id], onDelete: Cascade)
+  parentCommentId String?
+  parentComment   Comment?    @relation("CommentReplies", fields: [parentCommentId], references: [id], onDelete: Cascade)
+  replies         Comment[]   @relation("CommentReplies")
+  content         String
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deletedAt       DateTime?
+
+  @@index([newsArticleId])
+  @@index([userId])
+  @@index([parentCommentId])
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  followerId  String
+  follower    User     @relation("FollowerUsers", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("FollowingUsers", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Notification {
+  id              String           @id @default(uuid())
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            NotificationType
+  title           String
+  message         String
+  relatedArticleId String?
+  relatedUserId   String?
+  isRead          Boolean          @default(false)
+  createdAt       DateTime         @default(now())
+
+  @@index([userId, isRead])
+}
+
+model UserPreferences {
+  id                String       @id @default(uuid())
+  userId            String       @unique
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  preferredDomains  NewsDomain[] @default([])
+  preferredTags     String[]     @default([])
+  preferredLanguage String       @default("en")
+  theme             String       @default("dark")
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+}
