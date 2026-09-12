@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "rimraf dist && tsc",
+    "build": "npx rimraf dist && npx tsc",
     "start": "node dist/server.js",
     "type-check": "tsc --noEmit",
     "prisma:generate": "prisma generate",
