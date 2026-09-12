@@ -17,7 +17,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenUpload }) => {
   return (
-    <footer className="border-t border-slate-800/80 bg-[#01040d] text-slate-400 py-12 px-4 md:px-8">
+    <footer className="border-t border-slate-800/80 bg-[#01040d] text-slate-400 pt-12 pb-24 md:py-12 px-4 md:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Left: Brand Logo & Tagline */}
         <div className="flex flex-col items-center md:items-start select-none">

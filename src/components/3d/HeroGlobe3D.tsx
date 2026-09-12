@@ -615,17 +615,17 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
           transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * -8}px, 0)`,
           transition: "transform 0.18s ease-out",
         }}
-        className="absolute top-8 sm:top-12 left-2 sm:left-4 z-20 cursor-pointer group"
+        className="absolute top-8 sm:top-12 left-1.5 sm:left-4 z-20 cursor-pointer group"
       >
-        <div className="flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-black/65 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/75 transition-all duration-300">
-          <div className="w-8 h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all">
-            <Brain className="w-4 h-4" />
+        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
+            <Brain className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-widest font-mono">
+            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
               AI
             </div>
-            <div className="text-[10px] text-white/40 font-normal mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
               Smarter Tomorrow
             </div>
           </div>
@@ -639,17 +639,17 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
           transform: `translate3d(${mousePos.x * 10}px, ${mousePos.y * -8}px, 0)`,
           transition: "transform 0.18s ease-out",
         }}
-        className="absolute top-8 sm:top-12 right-2 sm:right-4 z-20 cursor-pointer group"
+        className="absolute top-8 sm:top-12 right-1.5 sm:right-4 z-20 cursor-pointer group"
       >
-        <div className="flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-black/65 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/75 transition-all duration-300">
-          <div className="w-8 h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all">
-            <Bot className="w-4 h-4" />
+        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
+            <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-widest font-mono">
+            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
               ROBOTICS
             </div>
-            <div className="text-[10px] text-white/40 font-normal mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
               Humans. Amplified.
             </div>
           </div>
@@ -663,17 +663,17 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
           transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * 10}px, 0)`,
           transition: "transform 0.18s ease-out",
         }}
-        className="absolute bottom-8 sm:bottom-12 left-2 sm:left-4 z-20 cursor-pointer group"
+        className="absolute bottom-6 sm:bottom-12 left-1.5 sm:left-4 z-20 cursor-pointer group hidden sm:block"
       >
-        <div className="flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-black/65 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/75 transition-all duration-300">
-          <div className="w-8 h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all">
-            <Atom className="w-4 h-4" />
+        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
+            <Atom className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-widest font-mono">
+            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
               QUANTUM
             </div>
-            <div className="text-[10px] text-white/40 font-normal mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
               Beyond the Limits
             </div>
           </div>
@@ -687,17 +687,17 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
           transform: `translate3d(${mousePos.x * 10}px, ${mousePos.y * 10}px, 0)`,
           transition: "transform 0.18s ease-out",
         }}
-        className="absolute bottom-8 sm:bottom-12 right-2 sm:right-4 z-20 cursor-pointer group"
+        className="absolute bottom-6 sm:bottom-12 right-1.5 sm:right-4 z-20 cursor-pointer group hidden sm:block"
       >
-        <div className="flex items-center gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl bg-black/65 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/75 transition-all duration-300">
-          <div className="w-8 h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all">
-            <Rocket className="w-4 h-4" />
+        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
+          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
+            <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-widest font-mono">
+            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
               SPACE
             </div>
-            <div className="text-[10px] text-white/40 font-normal mt-0.5">
+            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
               Further. Faster.
             </div>
           </div>

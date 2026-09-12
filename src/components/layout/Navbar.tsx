@@ -170,25 +170,24 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Right Search, Bookmark & Profile */}
-        <div className="flex items-center gap-3">
-          {/* Search Bar */}
+        {/* Right Search, Bookmark, Notifications & Profile */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          {/* Search Bar: icon-only on mobile, full input on tablet/desktop */}
           <div
             onClick={onOpenSearch}
-            className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/8 bg-white/5 hover:bg-white/8 hover:border-white/15 text-white/50 hover:text-white/70 text-xs font-sans cursor-pointer transition-all duration-300 w-36 sm:w-56"
+            className="flex items-center justify-center sm:justify-start gap-2 p-2 sm:px-3 sm:py-1.5 rounded-xl border border-white/8 bg-white/5 hover:bg-white/8 hover:border-white/15 text-white/50 hover:text-white/70 text-xs font-sans cursor-pointer transition-all duration-300 w-9 h-9 sm:w-48 md:w-56"
           >
-            <Search className="w-3.5 h-3.5" />
+            <Search className="w-4 h-4 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
             <span className="truncate hidden sm:inline">Search tech news...</span>
-            <span className="truncate sm:hidden">Search...</span>
-            <kbd className="ml-auto text-[10px] font-mono bg-white/8 px-1.5 py-0.5 rounded border border-white/10 text-white/30 hidden sm:inline-block">
+            <kbd className="ml-auto text-[10px] font-mono bg-white/8 px-1.5 py-0.5 rounded border border-white/10 text-white/30 hidden md:inline-block">
               Ctrl K
             </kbd>
           </div>
 
-          {/* Bookmark Button */}
+          {/* Bookmark Button (hidden on mobile since it's prominently in MobileBottomNav) */}
           <button
             onClick={onOpenSaved}
-            className="relative p-2 rounded-xl border border-white/8 bg-white/5 hover:bg-white/10 hover:border-white/15 text-white/50 hover:text-white transition-all duration-300"
+            className="hidden sm:flex relative p-2 rounded-xl border border-white/8 bg-white/5 hover:bg-white/10 hover:border-white/15 text-white/50 hover:text-white transition-all duration-300"
             title="Saved Stories"
           >
             <Bookmark className="w-4 h-4" />
@@ -226,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 aria-label="User menu"
               >
-                <div className="w-8 h-8 rounded-full bg-[#0c1a3c] flex items-center justify-center overflow-hidden">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#0c1a3c] flex items-center justify-center overflow-hidden">
                   {user.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
@@ -327,19 +326,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           ) : (
             <button
               onClick={() => onOpenAuth("login")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900/80 hover:border-sky-500/50 text-slate-200 hover:text-white text-xs font-semibold transition-all"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-900/80 hover:border-sky-500/50 text-slate-200 hover:text-white text-xs font-semibold transition-all"
             >
               <UserIcon className="w-3.5 h-3.5 text-sky-400" />
-              <span>Log In</span>
+              <span className="hidden sm:inline">Log In</span>
             </button>
           )}
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 rounded-lg border border-slate-800 text-slate-400 hover:text-white"
+            className="md:hidden p-1.5 sm:p-2 rounded-xl border border-white/8 bg-white/5 text-slate-400 hover:text-white transition-colors"
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
           </button>
         </div>
       </div>

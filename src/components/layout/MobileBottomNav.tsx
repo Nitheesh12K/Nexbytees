@@ -22,7 +22,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   isLoggedIn,
 }) => {
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#060c1c]/95 backdrop-blur-xl border-t border-slate-800/90 py-1.5 px-4 shadow-[0_-8px_25px_rgba(0,0,0,0.8)]">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#060c1c]/95 backdrop-blur-xl border-t border-slate-800/90 pt-1.5 pb-3 sm:pb-2 px-3 shadow-[0_-8px_25px_rgba(0,0,0,0.8)]">
       <div className="flex items-center justify-around">
         {/* 1. Home */}
         <button
