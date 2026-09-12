@@ -551,7 +551,7 @@ export default function Home() {
       />
 
       {/* Main Content Areas */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
         {/* Hero Section with 3D Connected Earth */}
         <HeroSection
           onExploreTrending={() => handleNavigation("trending")}

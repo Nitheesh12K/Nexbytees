@@ -34,7 +34,7 @@ export const TrendingCarousel: React.FC<TrendingCarouselProps> = ({
   };
 
   return (
-    <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
+    <section id="trending" className="py-12 px-4 md:px-8 max-w-7xl mx-auto overflow-hidden">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-7">
         <div>
