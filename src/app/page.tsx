@@ -529,7 +529,7 @@ export default function Home() {
   const userUploads = stories.filter((s) => s.isCommunitySubmission);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#02050f] text-slate-100 selection:bg-sky-400 selection:text-slate-950 relative pb-16 md:pb-0">
+    <div className="min-h-screen flex flex-col bg-[#08090B] text-[#F5F5F5] selection:bg-[#2F80FF] selection:text-[#08090B] relative pb-16 md:pb-0">
       {/* Sticky Top Navigation */}
       <Navbar
         onOpenSearch={() => setIsSearchOpen(true)}
@@ -552,11 +552,16 @@ export default function Home() {
 
       {/* Main Content Areas */}
       <main className="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
-        {/* Hero Section with 3D Connected Earth */}
+        {/* Editorial Front Page Spread */}
         <HeroSection
+          leadStory={stories[0]}
+          secondaryStories={stories.slice(1, 3)}
+          onOpenArticle={(story) => setActiveArticle(story)}
           onExploreTrending={() => handleNavigation("trending")}
           onExploreDomains={() => handleNavigation("domains")}
           onSelectDomain={handleSelectDomain}
+          onToggleBookmark={handleToggleBookmark}
+          bookmarkedIds={bookmarkedIds}
         />
 
         {/* Trending Technology Wire Carousel */}

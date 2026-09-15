@@ -22,76 +22,76 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   isLoggedIn,
 }) => {
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#060c1c]/95 backdrop-blur-xl border-t border-slate-800/90 pt-1.5 pb-3 sm:pb-2 px-2 shadow-[0_-8px_25px_rgba(0,0,0,0.8)]">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0B0D10]/98 backdrop-blur-md border-t border-[#202328] pt-1 pb-3 px-2">
       <div className="flex items-center justify-between w-full max-w-md mx-auto">
         {/* 1. Home */}
         <button
           onClick={() => onNavigate("home")}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg transition-colors",
+            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 transition-colors",
             activeSection === "home"
-              ? "text-sky-400 font-bold"
-              : "text-slate-400 hover:text-white"
+              ? "text-[#2F80FF] font-bold"
+              : "text-[#70737A] hover:text-[#F5F5F5]"
           )}
         >
           <Home className="w-4 h-4 flex-shrink-0" />
-          <span className="text-[10px] font-sans truncate">Home</span>
+          <span className="text-[10px] font-sans truncate uppercase tracking-wider">Home</span>
         </button>
 
         {/* 2. Trending */}
         <button
           onClick={() => onNavigate("trending")}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg transition-colors",
+            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 transition-colors",
             activeSection === "trending"
-              ? "text-sky-400 font-bold"
-              : "text-slate-400 hover:text-white"
+              ? "text-[#2F80FF] font-bold"
+              : "text-[#70737A] hover:text-[#F5F5F5]"
           )}
         >
           <Flame className="w-4 h-4 flex-shrink-0" />
-          <span className="text-[10px] font-sans truncate">Trending</span>
+          <span className="text-[10px] font-sans truncate uppercase tracking-wider">Trending</span>
         </button>
 
         {/* 3. Domains */}
         <button
           onClick={() => onNavigate("domains")}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg transition-colors",
+            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 transition-colors",
             activeSection === "domains"
-              ? "text-sky-400 font-bold"
-              : "text-slate-400 hover:text-white"
+              ? "text-[#2F80FF] font-bold"
+              : "text-[#70737A] hover:text-[#F5F5F5]"
           )}
         >
           <Layers className="w-4 h-4 flex-shrink-0" />
-          <span className="text-[10px] font-sans truncate">Domains</span>
+          <span className="text-[10px] font-sans truncate uppercase tracking-wider">Desks</span>
         </button>
 
         {/* 4. Saved */}
         <button
           onClick={onOpenSaved}
-          className="flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg text-slate-400 hover:text-white transition-colors"
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 text-[#70737A] hover:text-[#F5F5F5] transition-colors"
         >
           <div className="relative">
             <Bookmark className="w-4 h-4 flex-shrink-0" />
             {savedCount > 0 && (
-              <span className="absolute -top-1 -right-2 w-3.5 h-3.5 rounded-full bg-sky-500 text-slate-950 font-bold text-[9px] flex items-center justify-center font-mono">
+              <span className="absolute -top-1 -right-2 min-w-[14px] h-3.5 px-0.5 rounded-full bg-[#2F80FF] text-white font-bold text-[8px] flex items-center justify-center font-mono">
                 {savedCount}
               </span>
             )}
           </div>
-          <span className="text-[10px] font-sans truncate">Saved</span>
+          <span className="text-[10px] font-sans truncate uppercase tracking-wider">Saved</span>
         </button>
 
         {/* 5. Profile */}
         <button
           onClick={onOpenProfile}
           className={cn(
-            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 rounded-lg transition-colors",
-            isLoggedIn ? "text-sky-400 font-semibold" : "text-slate-400 hover:text-white"
+            "flex-1 flex flex-col items-center justify-center gap-1 py-1 px-1 transition-colors",
+            isLoggedIn ? "text-[#2F80FF] font-bold" : "text-[#70737A] hover:text-[#F5F5F5]"
           )}
         >
           <UserIcon className="w-4 h-4 flex-shrink-0" />
-          <span className="text-[10px] font-sans truncate">{isLoggedIn ? "Profile" : "Log In"}</span>
+          <span className="text-[10px] font-sans truncate uppercase tracking-wider">{isLoggedIn ? "Account" : "Sign In"}</span>
         </button>
       </div>
     </div>

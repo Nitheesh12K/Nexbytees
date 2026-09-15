@@ -17,94 +17,88 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenUpload }) => {
   return (
-    <footer className="border-t border-slate-800/80 bg-[#01040d] text-slate-400 pt-12 pb-24 md:py-12 px-4 md:px-8">
+    <footer className="border-t border-[#202328] bg-[#08090B] text-[#70737A] pt-12 pb-24 md:py-12 px-4 md:px-8">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
         {/* Left: Brand Logo & Tagline */}
         <div className="flex flex-col items-center md:items-start select-none">
-          <div className="text-lg font-black tracking-wider text-white uppercase flex items-center">
-            NE<span className="text-sky-400">X</span>BYTEES
+          <div className="text-lg font-black tracking-tight text-[#F5F5F5] uppercase flex items-center">
+            NEXBYTEES
           </div>
-          <span className="text-[9px] font-mono tracking-widest text-slate-500 uppercase -mt-0.5">
-            AI • TECHNOLOGY • FUTURE
+          <span className="text-[9px] font-mono tracking-widest text-[#70737A] uppercase mt-0.5">
+            GLOBAL TECH MEDIA &amp; INTELLIGENCE
           </span>
         </div>
 
         {/* Center: Nav Links */}
-        <nav className="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-300 font-sans">
+        <nav className="flex flex-wrap items-center justify-center gap-6 text-xs text-[#A7A9AD] font-mono uppercase tracking-wider">
           <button
             onClick={() => onNavigate("home")}
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             Home
           </button>
           <button
             onClick={() => onNavigate("trending")}
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             Trending
           </button>
           <button
             onClick={() => onNavigate("domains")}
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
-            Domains
+            Desks
           </button>
           <button
             onClick={() => onNavigate("latest")}
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             Latest
           </button>
           <button
             onClick={onOpenUpload}
-            className="hover:text-sky-400 transition-colors"
+            className="hover:text-[#2F80FF] transition-colors"
           >
-            Community
-          </button>
-          <button
-            onClick={() => onNavigate("home")}
-            className="hover:text-white transition-colors"
-          >
-            About
+            Dispatch Wire
           </button>
         </nav>
 
         {/* Social Icons */}
-        <div className="flex items-center gap-4 text-slate-400">
+        <div className="flex items-center gap-4 text-[#70737A]">
           <a
             href="#x"
             aria-label="X Twitter"
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             <XIcon className="w-4 h-4" />
           </a>
           <a
             href="#youtube"
             aria-label="YouTube"
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             <Youtube className="w-4 h-4" />
           </a>
           <a
             href="#instagram"
             aria-label="Instagram"
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             <Instagram className="w-4 h-4" />
           </a>
           <a
             href="#linkedin"
             aria-label="LinkedIn"
-            className="hover:text-white transition-colors"
+            className="hover:text-[#F5F5F5] transition-colors"
           >
             <Linkedin className="w-4 h-4" />
           </a>
         </div>
 
         {/* Right: Subtext */}
-        <div className="text-center md:text-right font-sans text-xs text-slate-500 leading-tight">
+        <div className="text-center md:text-right font-mono text-xs text-[#70737A] leading-tight">
           <div>Technology moves fast.</div>
-          <div className="text-slate-400">Stay ahead.</div>
+          <div className="text-[#A7A9AD]">Stay ahead.</div>
         </div>
       </div>
     </footer>

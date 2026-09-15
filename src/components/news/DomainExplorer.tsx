@@ -80,40 +80,36 @@ export const DomainExplorer: React.FC<DomainExplorerProps> = ({
   ];
 
   return (
-    <section id="domains" className="py-12 px-4 md:px-8 max-w-7xl mx-auto">
+    <section id="domains" className="py-10 px-4 md:px-8 max-w-7xl mx-auto border-b border-[#202328]">
       {/* Header */}
-      <div className="flex items-center justify-between mb-7">
-        <div>
-          <div className="flex items-center gap-3">
-            {/* Brand accent line */}
-            <div className="w-1 h-6 bg-sky-400 rounded-full shadow-[0_0_8px_rgba(56,189,248,0.5)] flex-shrink-0" />
-            <div className="flex items-center gap-2">
-              <LayoutGrid className="w-5 h-5 text-sky-400" />
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-white">
-                Explore Technology
-              </h2>
-            </div>
+      <div className="flex items-center justify-between pb-4 mb-6 border-b border-[#202328]">
+        <div className="flex items-center gap-3">
+          <div className="w-1 h-5 bg-[#2F80FF] rounded-sm flex-shrink-0" />
+          <div className="flex items-center gap-2">
+            <LayoutGrid className="w-4 h-4 text-[#2F80FF]" />
+            <h2 className="text-base sm:text-lg font-black tracking-tight text-[#F5F5F5] uppercase">
+              REPORTING DESKS · 25+ DOMAINS
+            </h2>
           </div>
-          <p className="text-xs md:text-sm text-white/35 mt-1.5 ml-4">
-            Dive into the domains shaping our future.
-          </p>
+          <span className="hidden sm:inline text-xs font-mono text-[#70737A]">
+            (SELECT A DESK TO FILTER THE LIVE WIRE)
+          </span>
         </div>
 
         <button
           onClick={onOpenAllDomainsModal}
-          className="flex items-center gap-1 text-xs font-semibold text-sky-400/80 hover:text-sky-300 transition-colors"
+          className="flex items-center gap-1 text-xs font-mono text-[#2F80FF] hover:text-[#70A6FF] transition-colors"
         >
-          <span>View All Domains</span>
+          <span>DIRECTORY</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
       {/* Domain Cards Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         {DOMAINS_DISPLAY.map((dom) => {
           const Icon = dom.icon;
-          const isSelected =
-            selectedDomain === dom.name || (!selectedDomain && dom.defaultActive);
+          const isSelected = selectedDomain === dom.name;
 
           return (
             <div
@@ -122,33 +118,38 @@ export const DomainExplorer: React.FC<DomainExplorerProps> = ({
                 onSelectDomain(selectedDomain === dom.name ? null : dom.name)
               }
               className={cn(
-                "cursor-pointer select-none rounded-2xl p-4 flex flex-col items-center justify-between text-center transition-all duration-300 group",
-                "bg-gradient-to-b from-[#08101f]/95 via-[#050b18]/95 to-[#020710]",
-                "min-h-[145px]",
-                "hover:scale-[1.02]",
+                "relative cursor-pointer select-none rounded-md p-3.5 flex flex-col items-center justify-between text-center transition-all duration-200 group",
+                "min-h-[128px]",
                 isSelected
-                  ? "border border-sky-400/60 shadow-[0_0_0_1px_rgba(56,189,248,0.3),0_8px_32px_rgba(56,189,248,0.12)]"
-                  : "border border-white/6 hover:border-white/12 hover:shadow-[0_8px_24px_rgba(0,0,0,0.7)]"
+                  ? "bg-[#15171B] border border-[#2F80FF] shadow-sm"
+                  : "bg-[#111317] border border-[#202328] hover:bg-[#15171B] hover:border-[#2C3038]"
               )}
             >
-              {/* Icon with disc background */}
+              {isSelected && (
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#2F80FF] rounded-t-md" />
+              )}
+
+              {/* Icon */}
               <div
                 className={cn(
-                  "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 mt-1",
+                  "w-10 h-10 rounded-sm flex items-center justify-center transition-colors mt-1",
                   isSelected
-                    ? "bg-sky-500/12 text-sky-300 drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]"
-                    : "bg-white/4 text-sky-400/70 group-hover:text-sky-300 group-hover:bg-sky-500/10"
+                    ? "bg-[#2F80FF]/15 text-[#2F80FF]"
+                    : "bg-[#1A1D23] text-[#A7A9AD] group-hover:text-[#2F80FF] group-hover:bg-[#20242C]"
                 )}
               >
-                <Icon className="w-6 h-6" />
+                <Icon className="w-5 h-5" />
               </div>
 
               {/* Label */}
-              <div className="mt-3">
-                <div className="text-xs sm:text-sm font-bold text-white/85 group-hover:text-white transition-colors">
+              <div className="mt-2.5">
+                <div className={cn(
+                  "text-xs font-bold transition-colors leading-tight",
+                  isSelected ? "text-[#F5F5F5]" : "text-[#A7A9AD] group-hover:text-[#F5F5F5]"
+                )}>
                   {dom.label}
                 </div>
-                <div className="text-[10px] text-white/30 font-normal mt-0.5 leading-tight">
+                <div className="text-[10px] text-[#70737A] font-mono mt-0.5 leading-tight">
                   {dom.subtitle}
                 </div>
               </div>
@@ -160,22 +161,20 @@ export const DomainExplorer: React.FC<DomainExplorerProps> = ({
         <div
           onClick={onOpenAllDomainsModal}
           className={cn(
-            "cursor-pointer select-none rounded-2xl p-4 flex flex-col items-center justify-between text-center transition-all duration-300 group",
-            "bg-gradient-to-b from-[#08101f]/95 via-[#050b18]/95 to-[#020710]",
-            "border border-white/6 hover:border-sky-400/30 min-h-[145px] hover:scale-[1.02]",
-            "hover:shadow-[0_8px_24px_rgba(0,0,0,0.7),0_0_0_1px_rgba(56,189,248,0.1)]"
+            "cursor-pointer select-none rounded-md p-3.5 flex flex-col items-center justify-between text-center transition-all duration-200 group",
+            "bg-[#111317] border border-[#202328] hover:bg-[#15171B] hover:border-[#2F80FF] min-h-[128px]"
           )}
         >
-          <div className="w-12 h-12 rounded-full flex items-center justify-center text-sky-400/60 bg-white/4 group-hover:text-sky-300 group-hover:bg-sky-500/10 transition-all duration-300 mt-1">
-            <LayoutGrid className="w-6 h-6" />
+          <div className="w-10 h-10 rounded-sm flex items-center justify-center text-[#70737A] bg-[#1A1D23] group-hover:text-[#2F80FF] group-hover:bg-[#20242C] transition-colors mt-1">
+            <LayoutGrid className="w-5 h-5" />
           </div>
 
-          <div className="mt-3">
-            <div className="text-xs sm:text-sm font-bold text-white/85 group-hover:text-white transition-colors">
-              More
+          <div className="mt-2.5">
+            <div className="text-xs font-bold text-[#A7A9AD] group-hover:text-[#F5F5F5] transition-colors leading-tight">
+              All Desks
             </div>
-            <div className="text-[10px] text-white/30 font-normal mt-0.5 leading-tight">
-              Domains
+            <div className="text-[10px] text-[#70737A] font-mono mt-0.5 leading-tight">
+              +18 More
             </div>
           </div>
         </div>

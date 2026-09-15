@@ -97,33 +97,33 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
       {/* Search Dialog */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: -20 }}
+        initial={{ opacity: 0, scale: 0.98, y: -10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: -20 }}
-        className="relative w-full max-w-2xl bg-[#091124] border border-slate-800 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden z-10 text-slate-100"
+        exit={{ opacity: 0, scale: 0.98, y: -10 }}
+        className="relative w-full max-w-2xl bg-[#111317] border border-[#202328] rounded-md shadow-[0_24px_80px_rgba(0,0,0,0.9)] overflow-hidden z-10 text-[#F5F5F5]"
       >
         {/* Input Header */}
-        <div className="flex items-center px-4 py-3.5 border-b border-slate-800 bg-slate-900/60">
-          <Search className="w-5 h-5 text-sky-400 mr-3 shrink-0" />
+        <div className="flex items-center px-4 py-3.5 border-b border-[#202328] bg-[#0B0D10]">
+          <Search className="w-4 h-4 text-[#2F80FF] mr-3 shrink-0" />
           <input
             ref={inputRef}
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search headlines, domains, tags, or sources..."
-            className="w-full bg-transparent text-sm md:text-base text-white placeholder-slate-500 focus:outline-none font-sans"
+            placeholder="Search dispatches, domains, research topics, or sources..."
+            className="w-full bg-transparent text-sm text-[#F5F5F5] placeholder-[#70737A] focus:outline-none font-sans"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm("")}
-              className="text-slate-400 hover:text-white mr-2 text-xs font-mono"
+              className="text-[#70737A] hover:text-[#F5F5F5] mr-2 text-xs font-mono"
             >
               Clear
             </button>
           )}
           <button
             onClick={onClose}
-            className="p-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+            className="p-1 rounded bg-[#15171B] border border-[#202328] text-[#70737A] hover:text-[#F5F5F5] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -131,19 +131,19 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
         {/* Quick Suggested Tags */}
         {!query && (
-          <div className="p-5 border-b border-slate-800/80 bg-slate-900/30">
-            <div className="text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-2.5">
+          <div className="p-4 border-b border-[#202328] bg-[#0B0D10]/50">
+            <div className="text-[10px] font-mono text-[#70737A] uppercase tracking-wider mb-2">
               Popular Search Filters
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               {["Agentic AI", "Humanoid", "Quantum", "Semiconductors", "M4 Ultra", "Superconductor"].map(
                 (term) => (
                   <button
                     key={term}
                     onClick={() => setSearchTerm(term)}
-                    className="flex items-center gap-1 text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-sky-300 hover:border-sky-500/40 transition-colors"
+                    className="flex items-center gap-1 text-xs font-mono px-2.5 py-1 rounded bg-[#15171B] border border-[#202328] text-[#A7A9AD] hover:text-[#2F80FF] hover:border-[#2F80FF] transition-colors"
                   >
-                    <Hash className="w-3 h-3 text-sky-400" />
+                    <Hash className="w-3 h-3 text-[#2F80FF]" />
                     <span>{term}</span>
                   </button>
                 )
@@ -153,16 +153,16 @@ export const SearchModal: React.FC<SearchModalProps> = ({
         )}
 
         {/* Live Search Results */}
-        <div className="max-h-96 overflow-y-auto p-4 space-y-2.5">
+        <div className="max-h-96 overflow-y-auto p-4 space-y-2">
           {isSearchingBackend && results.length === 0 && (
-            <div className="py-12 text-center text-slate-500 text-xs font-mono flex items-center justify-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
+            <div className="py-12 text-center text-[#70737A] text-xs font-mono flex items-center justify-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#2F80FF] animate-ping" />
               <span>Querying live intelligence database...</span>
             </div>
           )}
 
           {!isSearchingBackend && query && results.length === 0 && (
-            <div className="py-12 text-center text-slate-500 text-xs font-mono">
+            <div className="py-12 text-center text-[#70737A] text-xs font-mono">
               No matching coverage found for &ldquo;{searchTerm}&rdquo;. Try another technical keyword.
             </div>
           )}
@@ -174,42 +174,42 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                 onOpenArticle(story);
                 onClose();
               }}
-              className="group p-3.5 rounded-xl border border-slate-800/80 bg-[#0c1630]/60 hover:bg-slate-900 hover:border-sky-500/40 transition-all cursor-pointer flex items-center justify-between gap-4"
+              className="group p-3 rounded-md border border-[#202328] bg-[#0B0D10] hover:bg-[#15171B] hover:border-[#2C3038] transition-all cursor-pointer flex items-center justify-between gap-4"
             >
               <div className="flex items-center gap-3 overflow-hidden">
                 <img
                   src={story.imageUrl}
                   alt={story.title}
-                  className="w-14 h-14 rounded-lg object-cover shrink-0 border border-slate-800"
+                  className="w-12 h-12 rounded-sm object-cover shrink-0 border border-[#202328]"
                 />
                 <div className="overflow-hidden">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-sky-400">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#2F80FF]">
                       {story.domain}
                     </span>
-                    <span className="text-slate-600 text-xs">•</span>
-                    <span className="text-[10px] font-mono text-slate-500">
+                    <span className="text-[#70737A] text-xs">•</span>
+                    <span className="text-[10px] font-mono text-[#70737A]">
                       {story.source}
                     </span>
                   </div>
-                  <h4 className="text-xs md:text-sm font-bold text-white group-hover:text-sky-300 transition-colors truncate">
+                  <h4 className="text-xs sm:text-sm font-bold text-[#F5F5F5] group-hover:text-[#2F80FF] transition-colors truncate">
                     {story.title}
                   </h4>
-                  <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                  <p className="text-[11px] text-[#70737A] truncate mt-0.5">
                     {story.summary}
                   </p>
                 </div>
               </div>
 
-              <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all shrink-0" />
+              <ArrowUpRight className="w-4 h-4 text-[#70737A] group-hover:text-[#2F80FF] group-hover:translate-x-0.5 transition-all shrink-0" />
             </div>
           ))}
         </div>
 
         {/* Footer info */}
-        <div className="px-4 py-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
-          <span>Live filter across headlines, tags & domains</span>
-          <span>{results.length > 0 ? `${results.length} results found` : "Type to filter"}</span>
+        <div className="px-4 py-2 bg-[#0B0D10] border-t border-[#202328] flex items-center justify-between text-[11px] font-mono text-[#70737A]">
+          <span>Live filter across headlines, tags &amp; domains</span>
+          <span>{results.length > 0 ? `${results.length} dispatches found` : "Type to filter"}</span>
         </div>
       </motion.div>
     </div>

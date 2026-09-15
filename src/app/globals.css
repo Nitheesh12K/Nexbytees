@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --background: #010409;
-  --foreground: #f8fafc;
-  --accent-blue: #38bdf8;
-  --accent-blue-dim: rgba(56, 189, 248, 0.4);
+  --background: #08090B;
+  --foreground: #F5F5F5;
+  --accent-blue: #2F80FF;
+  --accent-blue-dim: rgba(47, 128, 255, 0.4);
 }
 
 html.light {
-  --background: #f8fafc;
-  --foreground: #091124;
+  --background: #F8F9FA;
+  --foreground: #111317;
 }
 
 html {
@@ -42,46 +42,50 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 ::selection {
-  background: #38bdf8;
-  color: #030712;
+  background: #2F80FF;
+  color: #08090B;
 }
 
 /* Light Mode Overrides for Glass Cards & Backgrounds */
 html.light body {
-  background-color: #f8fafc !important;
-  color: #091124 !important;
+  background-color: #F8F9FA !important;
+  color: #111317 !important;
 }
 
 html.light header {
-  background-color: rgba(255, 255, 255, 0.9) !important;
-  border-color: rgba(226, 232, 240, 0.8) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(220, 224, 230, 0.8) !important;
 }
 
 html.light footer {
-  background-color: #f1f5f9 !important;
-  border-color: #e2e8f0 !important;
-  color: #475569 !important;
+  background-color: #F1F3F5 !important;
+  border-color: #E2E5EA !important;
+  color: #4A505A !important;
 }
 
 html.light .text-white {
-  color: #0f172a !important;
+  color: #111317 !important;
 }
 
 html.light .text-slate-100,
 html.light .text-slate-200 {
-  color: #1e293b !important;
+  color: #20242C !important;
 }
 
 html.light .text-slate-300,
 html.light .text-slate-400 {
-  color: #475569 !important;
+  color: #555A64 !important;
 }
 
 html.light .bg-\[\#02050f\],
+html.light .bg-\[\#08090B\],
+html.light .bg-\[\#0B0D10\],
+html.light .bg-\[\#111317\],
+html.light .bg-\[\#15171B\],
 html.light .bg-\[\#030712\],
 html.light .bg-\[\#040816\],
 html.light .bg-\[\#070d1e\],
@@ -99,39 +103,39 @@ html.light .bg-\[\#0e172e\],
 html.light .bg-slate-900,
 html.light .bg-slate-950 {
   background-color: #ffffff !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
 }
 
 html.light .border-slate-800,
 html.light .border-slate-700 {
-  border-color: #e2e8f0 !important;
+  border-color: #E2E5EA !important;
 }
 
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #030712;
+  background: #08090B;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #202328;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #2E323A;
 }
 
 html.light ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F8F9FA;
 }
 
 html.light ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #CBD0D8;
 }
 
 /* Hide scrollbar utility */
@@ -143,7 +147,7 @@ html.light ::-webkit-scrollbar-thumb {
   scrollbar-width: none;
 }
 
-/* ── Premium animation keyframes ── */
+/* ── Refined animation keyframes ── */
 
 @keyframes shimmer {
   0% { background-position: -200% center; }
@@ -152,13 +156,13 @@ html.light ::-webkit-scrollbar-thumb {
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-4px); }
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -166,17 +170,21 @@ html.light ::-webkit-scrollbar-thumb {
   }
 }
 
-@keyframes subtleGlow {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2); }
-  50% { box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5), 0 0 20px rgba(56, 189, 248, 0.1); }
-}
-
 .animate-float {
-  animation: float 4s ease-in-out infinite;
+  animation: float 5s ease-in-out infinite;
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Editorial hairline border utilities */
+.border-editorial {
+  border-color: #202328;
+}
+
+.border-editorial-subtle {
+  border-color: #1A1D23;
 }
 
 /* Premium image rendering */
@@ -184,7 +192,7 @@ img {
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* Smoother transition for all interactive elements */
+/* Precise transition for all interactive elements */
 button, a, [role="button"] {
-  transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-timing-function: cubic-bezier(0.2, 0.0, 0.2, 1);
 }

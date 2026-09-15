@@ -213,54 +213,52 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/85 backdrop-blur-md"
+          className="fixed inset-0 bg-black/85 backdrop-blur-sm"
         />
 
         {/* Modal Container */}
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.98 }}
+          initial={{ opacity: 0, y: 20, scale: 0.99 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.98 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
+          exit={{ opacity: 0, y: 16, scale: 0.99 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
           className={cn(
-            "relative w-full max-w-4xl bg-[#080e1e] border border-slate-800/90 rounded-none md:rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.95)]",
-            "z-10 max-h-screen md:max-h-[92vh] overflow-y-auto flex flex-col text-slate-100"
+            "relative w-full max-w-4xl bg-[#0B0D10] border border-[#202328] rounded-none md:rounded-lg shadow-[0_24px_80px_rgba(0,0,0,0.9)]",
+            "z-10 max-h-screen md:max-h-[92vh] overflow-y-auto flex flex-col text-[#F5F5F5]"
           )}
         >
           {/* Sticky Modal Top Bar */}
-          <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-[#080e1e]/90 backdrop-blur-md border-b border-slate-800/80">
-            <div className="flex items-center gap-2">
+          <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-3.5 bg-[#0B0D10]/95 backdrop-blur-md border-b border-[#202328]">
+            <div className="flex items-center gap-2.5">
               <button
                 onClick={() => {
                   onSelectDomain(article.domain);
                   onClose();
                 }}
-                className="text-xs font-mono font-semibold uppercase px-2.5 py-1 rounded bg-sky-500/10 text-sky-400 border border-sky-500/30 hover:bg-sky-500/20 transition-colors"
+                className="text-xs font-mono font-semibold uppercase px-2.5 py-1 rounded-sm bg-[#111317] text-[#2F80FF] border border-[#202328] hover:border-[#2F80FF] transition-colors"
               >
                 {article.domain}
               </button>
 
-              {article.isCommunitySubmission ? (
-                <CommunityBadge />
-              ) : (
-                <TrendingBadge type={article.trendingBadge || null} />
-              )}
+              <span className="hidden sm:inline text-xs font-mono text-[#70737A]">
+                NEXBYTEES EDITORIAL WIRE
+              </span>
             </div>
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               {/* Like Button */}
               <button
                 onClick={handleToggleLike}
                 disabled={isLiking}
                 aria-label="Like story"
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all duration-200",
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-xs font-mono transition-colors",
                   isLiked
-                    ? "bg-rose-500/15 border-rose-500/50 text-rose-400 shadow-[0_0_12px_rgba(244,63,94,0.2)]"
-                    : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                    ? "bg-rose-500/10 border-rose-500/40 text-rose-400"
+                    : "bg-[#111317] border-[#202328] text-[#70737A] hover:text-[#F5F5F5] hover:border-[#2C3038]"
                 )}
               >
-                <Heart className={cn("w-3.5 h-3.5 transition-transform active:scale-125", isLiked && "fill-rose-400 text-rose-400")} />
+                <Heart className={cn("w-3.5 h-3.5", isLiked && "fill-rose-400 text-rose-400")} />
                 <span>{likesCount}</span>
               </button>
 
@@ -268,19 +266,19 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                 onClick={() => onToggleBookmark(article.id)}
                 aria-label="Bookmark story"
                 className={cn(
-                  "p-2 rounded-lg border transition-all duration-200",
+                  "p-2 rounded-md border transition-colors",
                   isBookmarked
-                    ? "bg-sky-500/20 border-sky-500 text-sky-400"
-                    : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
+                    ? "bg-[#2F80FF]/15 border-[#2F80FF] text-[#2F80FF]"
+                    : "bg-[#111317] border-[#202328] text-[#70737A] hover:text-[#F5F5F5] hover:border-[#2C3038]"
                 )}
               >
-                <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-sky-400")} />
+                <Bookmark className={cn("w-4 h-4", isBookmarked && "fill-[#2F80FF]")} />
               </button>
 
               <button
                 onClick={() => onShare(article)}
                 aria-label="Share story"
-                className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors"
+                className="p-2 rounded-md bg-[#111317] border border-[#202328] text-[#70737A] hover:text-[#F5F5F5] hover:border-[#2C3038] transition-colors"
               >
                 <Share2 className="w-4 h-4" />
               </button>
@@ -288,7 +286,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
               <button
                 onClick={onClose}
                 aria-label="Close modal"
-                className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-colors"
+                className="p-2 rounded-md bg-[#111317] border border-[#202328] text-[#70737A] hover:text-[#F5F5F5] hover:border-[#2C3038] transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -296,65 +294,82 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
           </div>
 
           {/* Article Header & Metadata */}
-          <div className="p-6 md:p-10 space-y-6">
-            <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-white leading-tight">
+          <div className="p-6 md:p-10 space-y-7">
+            {/* Kicker */}
+            <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-[#2F80FF] uppercase font-semibold">
+              <span>{article.domain}</span>
+              <span className="text-[#70737A]">•</span>
+              <span>SPECIAL REPORT</span>
+            </div>
+
+            {/* Journalistic Headline */}
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#F5F5F5] leading-[1.18] font-sans">
               {article.title}
             </h1>
 
-            {/* Author / Metadata Row */}
-            <div className="flex flex-wrap items-center justify-between gap-4 py-3 border-y border-slate-800/70 text-xs text-slate-400 font-mono">
+            {/* Standfirst / Summary Lead */}
+            <div className="text-base sm:text-lg text-[#A7A9AD] font-normal leading-relaxed border-l-2 border-[#2F80FF] pl-4 py-1 italic bg-[#111317]/50 rounded-r">
+              {article.summary}
+            </div>
+
+            {/* Byline / Metadata Row */}
+            <div className="flex flex-wrap items-center justify-between gap-4 py-3.5 border-y border-[#202328] text-xs text-[#70737A] font-mono">
               <div className="flex items-center gap-4">
                 <span>
-                  By <strong className="text-slate-200 font-sans">{article.author}</strong>
+                  By <strong className="text-[#F5F5F5] font-sans">{article.author}</strong>
                 </span>
                 <span>•</span>
-                <span className="text-sky-400 font-sans">{article.source}</span>
+                <span className="text-[#2F80FF] font-sans font-semibold">{article.source}</span>
               </div>
 
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-slate-500" />
+                  <Clock className="w-3.5 h-3.5 text-[#70737A]" />
                   {article.publishedAt}
                 </span>
                 <span>•</span>
                 <span>{article.readTime}</span>
-                <span>•</span>
-                <span className="flex items-center gap-1 text-sky-300">
-                  <Flame className="w-3.5 h-3.5 text-rose-400" />
-                  Score: {article.trendingScore}
-                </span>
+                {article.trendingScore && (
+                  <>
+                    <span>•</span>
+                    <span className="flex items-center gap-1 text-[#A7A9AD]">
+                      <Flame className="w-3.5 h-3.5 text-[#2F80FF]" />
+                      Viral Rank: {article.trendingScore}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
-            {/* Hero Image */}
-            <div className="relative w-full h-[260px] md:h-[400px] rounded-xl overflow-hidden border border-slate-800/80 bg-slate-950">
+            {/* Full-Width Hero Photography */}
+            <div className="relative w-full aspect-[16/9] md:aspect-[16/10] rounded-md overflow-hidden border border-[#202328] bg-[#08090B]">
               <img
                 src={article.imageUrl}
                 alt={article.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#080e1e] via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] text-slate-400 font-mono">
-                <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded border border-white/10">
-                  Image Source: NEXBYTEES Visual Wire
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D10] via-transparent to-transparent opacity-60" />
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[10px] text-[#70737A] font-mono">
+                <span className="bg-[#08090B]/85 px-2 py-1 rounded border border-[#202328]">
+                  Source: NEXBYTEES Visual Wire
                 </span>
-                <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded border border-white/10">
-                  Domain: {article.domain}
+                <span className="bg-[#08090B]/85 px-2 py-1 rounded border border-[#202328]">
+                  Desk: {article.domain}
                 </span>
               </div>
             </div>
 
-            {/* Key Takeaways Box */}
+            {/* Key Editorial Takeaways */}
             {article.keyTakeaways && article.keyTakeaways.length > 0 && (
-              <div className="p-5 rounded-xl bg-gradient-to-br from-[#0e1b38]/70 to-[#091124]/90 border border-sky-500/25">
-                <div className="flex items-center gap-2 mb-3 text-sky-400 text-xs font-mono uppercase tracking-wider font-semibold">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Key Editorial Takeaways</span>
+              <div className="p-5 rounded-md bg-[#111317] border border-[#202328]">
+                <div className="flex items-center gap-2 mb-3 text-[#2F80FF] text-xs font-mono uppercase tracking-wider font-semibold">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Key Analytical Takeaways</span>
                 </div>
-                <ul className="space-y-2">
+                <ul className="space-y-2.5">
                   {article.keyTakeaways.map((item, index) => (
-                    <li key={index} className="flex items-start gap-2.5 text-xs md:text-sm text-slate-300">
-                      <Check className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                    <li key={index} className="flex items-start gap-2.5 text-xs md:text-sm text-[#A7A9AD]">
+                      <Check className="w-4 h-4 text-[#2F80FF] shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -362,40 +377,35 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
               </div>
             )}
 
-            {/* Article Summary Lead Paragraph */}
-            <div className="text-base md:text-lg text-slate-200 font-normal leading-relaxed border-l-2 border-sky-400 pl-4 py-1 italic bg-sky-500/5 rounded-r">
-              {article.summary}
-            </div>
-
-            {/* Main Editorial Content */}
-            <div className="space-y-4 text-sm md:text-base text-slate-300 leading-relaxed font-normal">
+            {/* Main Article Prose Content */}
+            <div className="space-y-5 text-sm md:text-base text-[#D4D7DC] leading-relaxed font-normal">
               {article.content.split("\n\n").map((paragraph, index) => {
                 if (paragraph.startsWith("### ")) {
                   return (
                     <h3
                       key={index}
-                      className="text-lg md:text-xl font-bold text-white pt-4 pb-1 border-b border-slate-800/80 tracking-tight"
+                      className="text-lg md:text-xl font-bold text-[#F5F5F5] pt-5 pb-1 border-b border-[#202328] tracking-tight font-sans"
                     >
                       {paragraph.replace("### ", "")}
                     </h3>
                   );
                 }
                 return (
-                  <p key={index} className="leading-relaxed text-slate-300">
+                  <p key={index} className="leading-relaxed">
                     {paragraph}
                   </p>
                 );
               })}
             </div>
 
-            {/* Tags Row */}
-            <div className="pt-6 border-t border-slate-800/70">
-              <span className="text-xs font-mono text-slate-500 mr-3">TOPICS:</span>
+            {/* Topic Keywords Row */}
+            <div className="pt-6 border-t border-[#202328]">
+              <span className="text-xs font-mono text-[#70737A] mr-3">INDEXED TOPICS:</span>
               <div className="inline-flex flex-wrap gap-1.5 mt-2">
                 {article.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-mono px-2.5 py-1 rounded bg-slate-900 text-slate-400 border border-slate-800 hover:border-sky-500/40 hover:text-sky-300 cursor-pointer transition-colors"
+                    className="text-xs font-mono px-2.5 py-1 rounded bg-[#111317] text-[#A7A9AD] border border-[#202328] hover:border-[#2F80FF] hover:text-[#F5F5F5] cursor-pointer transition-colors"
                   >
                     #{tag}
                   </span>
@@ -403,11 +413,11 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
               </div>
             </div>
 
-            {/* Related Stories Section */}
+            {/* Related Coverage Section */}
             {relatedStories.length > 0 && (
-              <div className="pt-8 border-t border-slate-800">
+              <div className="pt-8 border-t border-[#202328]">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-mono uppercase tracking-wider text-slate-400 font-semibold">
+                  <h3 className="text-xs font-mono uppercase tracking-wider text-[#F5F5F5] font-bold">
                     Related Coverage in {article.domain}
                   </h3>
                   <button
@@ -415,30 +425,30 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                       onSelectDomain(article.domain);
                       onClose();
                     }}
-                    className="text-xs font-mono text-sky-400 hover:underline flex items-center gap-1"
+                    className="text-xs font-mono text-[#2F80FF] hover:underline flex items-center gap-1"
                   >
                     View Domain Feed &rarr;
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {relatedStories.map((rel) => (
                     <div
                       key={rel.id}
                       onClick={() => onSelectRelated(rel)}
-                      className="group p-3 rounded-lg bg-slate-900/60 border border-slate-800 hover:border-sky-500/40 hover:bg-slate-900 cursor-pointer transition-all flex flex-col justify-between"
+                      className="group p-3.5 rounded-md bg-[#111317] border border-[#202328] hover:border-[#2C3038] hover:bg-[#15171B] cursor-pointer transition-all flex flex-col justify-between"
                     >
                       <div>
-                        <span className="text-[10px] font-mono text-sky-400 uppercase tracking-wider">
+                        <span className="text-[10px] font-mono text-[#2F80FF] uppercase tracking-wider">
                           {rel.domain}
                         </span>
-                        <h4 className="text-xs font-semibold text-slate-200 group-hover:text-sky-300 mt-1 line-clamp-2">
+                        <h4 className="text-xs font-bold text-[#F5F5F5] group-hover:text-[#2F80FF] mt-1.5 line-clamp-2 leading-snug">
                           {rel.title}
                         </h4>
                       </div>
-                      <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono mt-3">
+                      <div className="flex items-center justify-between text-[10px] text-[#70737A] font-mono mt-3">
                         <span>{rel.publishedAt}</span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-600 group-hover:text-sky-400 group-hover:translate-x-0.5 transition-all" />
+                        <ChevronRight className="w-3.5 h-3.5 text-[#70737A] group-hover:text-[#2F80FF] group-hover:translate-x-0.5 transition-all" />
                       </div>
                     </div>
                   ))}
@@ -446,16 +456,16 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
               </div>
             )}
 
-            {/* Community Discussion & Commentary Section */}
-            <div className="pt-8 border-t border-slate-800 space-y-6">
+            {/* Peer Technical Discussion Section */}
+            <div className="pt-8 border-t border-[#202328] space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-sky-400" />
-                  <h3 className="text-sm font-mono uppercase tracking-wider text-slate-300 font-semibold">
-                    Technical Commentary ({comments.length})
+                  <MessageSquare className="w-4 h-4 text-[#2F80FF]" />
+                  <h3 className="text-xs font-mono uppercase tracking-wider text-[#F5F5F5] font-bold">
+                    Technical Discourse &amp; Peer Commentary ({comments.length})
                   </h3>
                 </div>
-                <span className="text-[11px] font-mono text-slate-500">Live Peer Wire</span>
+                <span className="text-[11px] font-mono text-[#70737A]">VERIFIED WIRE</span>
               </div>
 
               {/* Comment Input */}
@@ -466,48 +476,48 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                       rows={3}
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      placeholder="Contribute technical insight or counter-argument..."
-                      className="w-full px-4 py-3 rounded-xl bg-slate-950/80 border border-slate-800 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors resize-none font-sans"
+                      placeholder="Contribute technical insights, code perspective, or counter-analysis..."
+                      className="w-full px-4 py-3 rounded-md bg-[#08090B] border border-[#202328] text-sm text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] transition-colors resize-none font-sans"
                     />
                   </div>
                   <div className="flex items-center justify-between">
-                    <div className="text-[11px] text-slate-500 font-mono">
-                      Posting as <strong className="text-slate-300">{currentUser.name}</strong>
+                    <div className="text-[11px] text-[#70737A] font-mono">
+                      Posting as <strong className="text-[#F5F5F5]">{currentUser.name}</strong>
                     </div>
                     <button
                       type="submit"
                       disabled={isPostingComment || !newComment.trim()}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-semibold text-xs font-mono transition-all shadow-[0_0_15px_rgba(56,189,248,0.25)]"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-md bg-[#2F80FF] hover:bg-[#1A6BE6] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-xs font-mono transition-colors"
                     >
                       <Send className="w-3.5 h-3.5" />
-                      <span>{isPostingComment ? "Publishing..." : "Post Insight"}</span>
+                      <span>{isPostingComment ? "Publishing..." : "Submit Insight"}</span>
                     </button>
                   </div>
                 </form>
               ) : (
-                <div className="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 flex items-center justify-between gap-4">
-                  <p className="text-xs text-slate-400 font-sans">
-                    Join the technical discourse. Log in or create an account to post insights.
+                <div className="p-4 rounded-md bg-[#111317] border border-[#202328] flex items-center justify-between gap-4">
+                  <p className="text-xs text-[#A7A9AD] font-sans">
+                    Join the technical discourse. Sign in or register to publish peer insights.
                   </p>
                   <button
                     onClick={onRequireAuth}
-                    className="px-3.5 py-1.5 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 text-xs font-mono transition-colors shrink-0"
+                    className="px-3.5 py-1.5 rounded-md bg-[#2F80FF]/15 border border-[#2F80FF] text-[#2F80FF] hover:bg-[#2F80FF]/25 text-xs font-mono transition-colors shrink-0"
                   >
                     Authenticate
                   </button>
                 </div>
               )}
 
-              {/* Comments Thread */}
+              {/* Comments List */}
               <div className="space-y-3">
                 {isLoadingComments && (
-                  <div className="py-6 text-center text-xs font-mono text-slate-500">
-                    Loading commentary...
+                  <div className="py-6 text-center text-xs font-mono text-[#70737A]">
+                    Loading commentary wire...
                   </div>
                 )}
 
                 {!isLoadingComments && comments.length === 0 && (
-                  <div className="py-6 text-center text-xs font-mono text-slate-500">
+                  <div className="py-6 text-center text-xs font-mono text-[#70737A]">
                     No commentary yet. Be the first to share your analysis.
                   </div>
                 )}
@@ -522,7 +532,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                   return (
                     <div
                       key={comment.id}
-                      className="p-4 rounded-xl bg-slate-950/50 border border-slate-800/60 hover:border-slate-800 transition-colors space-y-2"
+                      className="p-4 rounded-md bg-[#111317] border border-[#202328] space-y-2"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
@@ -534,20 +544,20 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                               )}`
                             }
                             alt={comment.user?.name || "Contributor"}
-                            className="w-6 h-6 rounded-full border border-sky-500/30 object-cover"
+                            className="w-6 h-6 rounded-sm border border-[#202328] object-cover"
                           />
                           <div className="flex items-center gap-2">
-                            <span className="text-xs font-semibold text-slate-200">
+                            <span className="text-xs font-semibold text-[#F5F5F5]">
                               {comment.user?.name || "Contributor"}
                             </span>
-                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-900 text-slate-400 border border-slate-800">
-                              {comment.user?.role || "Peer"}
+                            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[#08090B] text-[#70737A] border border-[#202328]">
+                              {comment.user?.role || "Contributor"}
                             </span>
                           </div>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="text-[10px] font-mono text-slate-500">
+                          <span className="text-[10px] font-mono text-[#70737A]">
                             {comment.createdAt
                               ? new Date(comment.createdAt).toLocaleDateString("en-US", {
                                   month: "short",
@@ -559,7 +569,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                             <button
                               onClick={() => handleDeleteComment(comment.id)}
                               aria-label="Delete comment"
-                              className="p-1 rounded text-slate-600 hover:text-rose-400 transition-colors"
+                              className="p-1 rounded text-[#70737A] hover:text-rose-400 transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -567,7 +577,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                         </div>
                       </div>
 
-                      <p className="text-xs md:text-sm text-slate-300 leading-relaxed pl-8 font-sans">
+                      <p className="text-xs md:text-sm text-[#D4D7DC] leading-relaxed pl-8 font-sans">
                         {comment.content}
                       </p>
                     </div>
@@ -577,24 +587,24 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
             </div>
           </div>
 
-          {/* Modal Footer actions */}
-          <div className="sticky bottom-0 bg-[#080e1e]/95 backdrop-blur-md px-6 py-4 border-t border-slate-800 flex items-center justify-between">
-            <div className="text-xs text-slate-500 font-mono">
+          {/* Modal Sticky Footer */}
+          <div className="sticky bottom-0 bg-[#0B0D10]/95 backdrop-blur-md px-6 py-3.5 border-t border-[#202328] flex items-center justify-between">
+            <div className="text-xs text-[#70737A] font-mono hidden sm:inline">
               NEXBYTEES Intelligence Editorial Wire
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 ml-auto sm:ml-0">
               <button
                 onClick={() => onToggleBookmark(article.id)}
-                className="flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-slate-700 transition-colors"
+                className="flex items-center gap-1.5 text-xs font-medium px-3.5 py-2 rounded-md bg-[#111317] border border-[#202328] text-[#A7A9AD] hover:text-[#F5F5F5] hover:border-[#2C3038] transition-colors"
               >
-                <Bookmark className={cn("w-3.5 h-3.5", isBookmarked && "text-sky-400 fill-sky-400")} />
+                <Bookmark className={cn("w-3.5 h-3.5", isBookmarked && "text-[#2F80FF] fill-[#2F80FF]")} />
                 <span>{isBookmarked ? "Saved" : "Save Story"}</span>
               </button>
 
               <button
                 onClick={onClose}
-                className="text-xs font-medium px-4 py-2 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-[0_0_15px_rgba(56,189,248,0.3)] transition-colors"
+                className="text-xs font-semibold px-4 py-2 rounded-md bg-[#2F80FF] hover:bg-[#1A6BE6] text-white transition-colors"
               >
                 Back to Feed
               </button>
