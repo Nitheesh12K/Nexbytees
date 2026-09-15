@@ -113,87 +113,87 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
       {/* Share Dialog */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
+        initial={{ opacity: 0, scale: 0.98, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="relative w-full max-w-md bg-[#091124] border border-sky-500/30 rounded-2xl shadow-2xl p-6 z-10 text-slate-100 overflow-hidden"
+        exit={{ opacity: 0, scale: 0.98, y: 10 }}
+        className="relative w-full max-w-md bg-[#0B0D10] border border-[#202328] rounded-md shadow-[0_20px_60px_rgba(0,0,0,0.9)] p-6 z-10 text-[#F5F5F5] overflow-hidden"
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded"
+          className="absolute top-4 right-4 text-[#70737A] hover:text-[#F5F5F5] p-1.5 rounded-md bg-[#111317] border border-[#202328] transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
 
-        <div className="flex items-center gap-2 text-sky-400 text-xs font-mono uppercase tracking-wider mb-2">
-          <Share2 className="w-4 h-4" />
-          <span>Share Technology Story</span>
+        <div className="flex items-center gap-2 text-[#2F80FF] text-[10px] font-mono uppercase tracking-wider mb-2">
+          <Share2 className="w-3.5 h-3.5" />
+          <span>Dispatch Syndicate · Share Story</span>
         </div>
 
-        <h3 className="text-sm sm:text-base font-bold text-white line-clamp-2 leading-snug">
+        <h3 className="text-sm sm:text-base font-bold text-[#F5F5F5] line-clamp-2 leading-snug">
           {story.title}
         </h3>
 
         {/* Copy Link Input Bar */}
-        <div className="mt-5 p-2.5 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-2">
+        <div className="mt-5 p-2 rounded-md bg-[#111317] border border-[#202328] flex items-center justify-between gap-2">
           <input
             type="text"
             readOnly
             value={url}
-            className="bg-transparent text-xs text-slate-300 font-mono w-full truncate focus:outline-none"
+            className="bg-transparent text-xs text-[#A7A9AD] font-mono w-full truncate focus:outline-none pl-2"
           />
 
           <button
             onClick={handleCopy}
             className={cn(
-              "px-3 py-1.5 rounded-lg text-xs font-bold font-mono shrink-0 flex items-center gap-1.5 transition-all",
+              "px-3 py-1.5 rounded-md text-xs font-bold font-mono shrink-0 flex items-center gap-1.5 transition-all cursor-pointer",
               copied
                 ? "bg-emerald-500 text-slate-950"
-                : "bg-sky-500 hover:bg-sky-400 text-slate-950"
+                : "bg-[#2F80FF] hover:bg-[#2566CC] text-white"
             )}
           >
             {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? "Copied!" : "Copy Link"}</span>
+            <span>{copied ? "Copied" : "Copy Link"}</span>
           </button>
         </div>
 
         {/* Social Share Grid */}
-        <div className="mt-5 pt-5 border-t border-slate-800/80">
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mb-3">
-            Direct Share
+        <div className="mt-5 pt-5 border-t border-[#202328]">
+          <span className="text-[10px] font-mono text-[#70737A] uppercase tracking-wider block mb-3">
+            Syndicate Channels
           </span>
 
           <div className="grid grid-cols-4 gap-2.5">
             <button
               onClick={shareWhatsApp}
-              className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 text-emerald-400 flex flex-col items-center gap-1.5 transition-all text-center group"
+              className="p-3 rounded-md bg-[#111317] border border-[#202328] hover:border-emerald-500/50 text-emerald-400 flex flex-col items-center gap-1.5 transition-colors text-center cursor-pointer group"
             >
-              <WhatsAppIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-300">WhatsApp</span>
+              <WhatsAppIcon className="w-4 h-4" />
+              <span className="text-[10px] font-mono text-[#A7A9AD]">WhatsApp</span>
             </button>
 
             <button
               onClick={shareTwitter}
-              className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/40 hover:bg-slate-800 text-white flex flex-col items-center gap-1.5 transition-all text-center group"
+              className="p-3 rounded-md bg-[#111317] border border-[#202328] hover:border-[#F5F5F5]/40 text-[#F5F5F5] flex flex-col items-center gap-1.5 transition-colors text-center cursor-pointer group"
             >
-              <XIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-300">X / Twitter</span>
+              <XIcon className="w-4 h-4" />
+              <span className="text-[10px] font-mono text-[#A7A9AD]">X / Twitter</span>
             </button>
 
             <button
               onClick={shareLinkedIn}
-              className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/30 hover:bg-sky-500/20 text-sky-400 flex flex-col items-center gap-1.5 transition-all text-center group"
+              className="p-3 rounded-md bg-[#111317] border border-[#202328] hover:border-[#2F80FF] text-[#2F80FF] flex flex-col items-center gap-1.5 transition-colors text-center cursor-pointer group"
             >
-              <LinkedInIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-300">LinkedIn</span>
+              <LinkedInIcon className="w-4 h-4" />
+              <span className="text-[10px] font-mono text-[#A7A9AD]">LinkedIn</span>
             </button>
 
             <button
               onClick={handleNativeShare}
-              className="p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-sky-500/40 hover:bg-slate-800 text-sky-300 flex flex-col items-center gap-1.5 transition-all text-center group"
+              className="p-3 rounded-md bg-[#111317] border border-[#202328] hover:border-[#2F80FF] text-[#A7A9AD] hover:text-white flex flex-col items-center gap-1.5 transition-colors text-center cursor-pointer group"
             >
-              <ExternalLink className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              <span className="text-[10px] font-mono text-slate-300">More</span>
+              <ExternalLink className="w-4 h-4" />
+              <span className="text-[10px] font-mono text-[#A7A9AD]">More</span>
             </button>
           </div>
         </div>

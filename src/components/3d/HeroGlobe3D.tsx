@@ -606,7 +606,7 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
         <path d="M 430 470 C 372 422, 342 378, 318 335" stroke="url(#lg2)" strokeWidth="1" strokeDasharray="4 4" />
       </svg>
 
-      {/* FOUR DOMAIN GLASS PANELS */}
+      {/* FOUR DOMAIN EDITORIAL BADGES */}
 
       {/* TOP-LEFT: AI */}
       <div
@@ -617,16 +617,16 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
         }}
         className="absolute top-8 sm:top-12 left-1.5 sm:left-4 z-20 cursor-pointer group"
       >
-        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
-            <Brain className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
+            <Brain className="w-3.5 h-3.5" />
           </div>
           <div>
-            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
-              AI
+            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
+              AI DESK
             </div>
-            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
-              Smarter Tomorrow
+            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
+              INTELLIGENCE
             </div>
           </div>
         </div>
@@ -641,16 +641,16 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
         }}
         className="absolute top-8 sm:top-12 right-1.5 sm:right-4 z-20 cursor-pointer group"
       >
-        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
-            <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
+            <Bot className="w-3.5 h-3.5" />
           </div>
           <div>
-            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
+            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
               ROBOTICS
             </div>
-            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
-              Humans. Amplified.
+            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
+              AUTONOMY
             </div>
           </div>
         </div>
@@ -665,16 +665,16 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
         }}
         className="absolute bottom-6 sm:bottom-12 left-1.5 sm:left-4 z-20 cursor-pointer group hidden sm:block"
       >
-        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
-            <Atom className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
+            <Atom className="w-3.5 h-3.5" />
           </div>
           <div>
-            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
+            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
               QUANTUM
             </div>
-            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
-              Beyond the Limits
+            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
+              PHYSICS & LATTICE
             </div>
           </div>
         </div>
@@ -689,16 +689,16 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
         }}
         className="absolute bottom-6 sm:bottom-12 right-1.5 sm:right-4 z-20 cursor-pointer group hidden sm:block"
       >
-        <div className="flex items-center gap-2 sm:gap-3 px-2.5 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl bg-black/75 border border-white/10 backdrop-blur-xl shadow-[0_16px_40px_rgba(0,0,0,0.9)] hover:border-white/20 hover:bg-black/85 transition-all duration-300">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-sky-500/12 border border-sky-400/25 flex items-center justify-center text-sky-400 group-hover:border-sky-400/50 group-hover:bg-sky-500/20 transition-all flex-shrink-0">
-            <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
+            <Rocket className="w-3.5 h-3.5" />
           </div>
           <div>
-            <div className="text-[11px] sm:text-xs font-bold text-white/90 group-hover:text-white uppercase tracking-wider sm:tracking-widest font-mono leading-none">
+            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
               SPACE
             </div>
-            <div className="text-[9px] sm:text-[10px] text-white/40 font-normal mt-0.5 hidden xs:block">
-              Further. Faster.
+            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
+              ORBITAL SYSTEMS
             </div>
           </div>
         </div>

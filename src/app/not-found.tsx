@@ -4,55 +4,52 @@ import { Compass, Home, Sparkles } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen bg-[#02050f] text-slate-100 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      {/* Background Volumetric Glow & Grid */}
-      <div className="absolute w-[500px] h-[500px] rounded-full bg-sky-500/10 blur-3xl pointer-events-none -z-10" />
-      <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none opacity-40 -z-10"
-      />
-
+    <div className="min-h-screen bg-[#08090B] text-[#F5F5F5] flex flex-col items-center justify-center p-6 relative">
       <div className="max-w-lg text-center relative z-10">
         {/* Brand Logo */}
-        <Link href="/" className="inline-flex flex-col items-center cursor-pointer select-none mb-8">
-          <div className="text-2xl font-black tracking-wider text-white uppercase flex items-center">
-            NE<span className="text-sky-400">X</span>BYTEES
+        <Link href="/" className="inline-flex flex-col items-center cursor-pointer select-none mb-8 group">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-5 bg-[#2F80FF] rounded-sm" />
+            <div className="text-2xl font-black tracking-tight text-[#F5F5F5] uppercase">
+              NEXBYTEES
+            </div>
           </div>
-          <span className="text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-0.5">
-            AI • TECHNOLOGY • FUTURE
+          <span className="text-[9px] font-mono tracking-[0.2em] text-[#70737A] uppercase mt-1">
+            TECH MEDIA & INTELLIGENCE
           </span>
         </Link>
 
         {/* Large 404 text */}
-        <div className="text-8xl sm:text-9xl font-black font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-sky-400 via-sky-600 to-transparent leading-none drop-shadow-[0_0_35px_rgba(56,189,248,0.4)]">
+        <div className="text-7xl sm:text-8xl font-black font-mono tracking-tighter text-[#202328] select-none leading-none">
           404
         </div>
 
         {/* Headline */}
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white mt-4 font-mono uppercase">
-          THIS STORY DOESN’T EXIST.
+        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-[#F5F5F5] mt-4 font-mono uppercase">
+          DISPATCH NOT FOUND
         </h1>
 
         {/* Description */}
-        <p className="text-xs sm:text-sm text-slate-400 mt-2 max-w-sm mx-auto leading-relaxed">
-          The page you’re looking for may have moved or no longer exists in our live technology index.
+        <p className="text-xs sm:text-sm text-[#A7A9AD] mt-2 max-w-sm mx-auto leading-relaxed font-sans">
+          The requested technology story, report, or analysis has moved or does not exist in the live index.
         </p>
 
         {/* Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3.5 mt-8">
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
           <Link
             href="/"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs shadow-[0_0_20px_rgba(56,189,248,0.4)] transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#2F80FF] hover:bg-[#2566CC] text-white font-bold text-xs uppercase tracking-wider transition-colors"
           >
-            <Home className="w-4 h-4" />
-            <span>Back Home</span>
+            <Home className="w-3.5 h-3.5" />
+            <span>Return to Front Page</span>
           </Link>
 
           <Link
             href="/#trending"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#091124] border border-slate-800 hover:border-sky-500/40 text-slate-300 hover:text-white font-medium text-xs transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#111317] border border-[#202328] hover:border-[#2C3038] text-[#A7A9AD] hover:text-[#F5F5F5] font-medium text-xs transition-colors"
           >
-            <Compass className="w-4 h-4 text-sky-400" />
-            <span>Explore Trending</span>
+            <Compass className="w-3.5 h-3.5 text-[#2F80FF]" />
+            <span>Trending Wire</span>
           </Link>
         </div>
       </div>

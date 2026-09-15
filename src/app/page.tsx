@@ -548,6 +548,8 @@ export default function Home() {
           setIsProfileOpen(true);
           setProfileTab("settings");
         }}
+        selectedDomain={selectedDomain}
+        onSelectDomain={handleSelectDomain}
       />
 
       {/* Main Content Areas */}

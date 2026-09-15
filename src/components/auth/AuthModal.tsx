@@ -198,53 +198,52 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        exit={{ opacity: 0, scale: 0.98, y: 10 }}
         className={cn(
-          "relative w-full max-w-md bg-[#08132e]/95 border border-sky-400/35 rounded-2xl",
-          "shadow-[0_20px_70px_rgba(0,0,0,0.9),0_0_30px_rgba(56,189,248,0.25)]",
-          "backdrop-blur-2xl z-10 overflow-hidden flex flex-col text-slate-100"
+          "relative w-full max-w-md bg-[#0B0D10] border border-[#202328] rounded-md",
+          "shadow-[0_20px_60px_rgba(0,0,0,0.85)]",
+          "z-10 overflow-hidden flex flex-col text-[#F5F5F5]"
         )}
       >
-        {/* Ambient Glow */}
-        <div className="absolute -top-24 -left-24 w-60 h-60 rounded-full bg-sky-500/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-60 h-60 rounded-full bg-blue-600/20 blur-3xl pointer-events-none" />
-
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-white transition-colors z-20"
+          className="absolute top-4 right-4 p-1.5 rounded-md bg-[#111317] border border-[#202328] text-[#70737A] hover:text-[#F5F5F5] transition-colors z-20"
         >
           <X className="w-4 h-4" />
         </button>
 
         {/* Modal Header */}
-        <div className="pt-8 pb-4 px-6 sm:px-8 text-center relative z-10">
-          <div className="inline-flex flex-col items-center cursor-pointer select-none mb-4">
-            <div className="text-xl font-black tracking-wider text-white uppercase flex items-center">
-              NE<span className="text-sky-400">X</span>BYTEES
+        <div className="pt-8 pb-4 px-6 sm:px-8 text-center relative z-10 border-b border-[#202328]/60">
+          <div className="inline-flex flex-col items-center cursor-pointer select-none mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-4 bg-[#2F80FF] rounded-sm" />
+              <div className="text-lg font-black tracking-tight text-[#F5F5F5] uppercase leading-none">
+                NEXBYTEES
+              </div>
             </div>
-            <span className="text-[9px] font-mono tracking-widest text-slate-400 uppercase -mt-0.5">
-              AI • TECHNOLOGY • FUTURE
+            <span className="text-[9px] font-mono tracking-[0.2em] text-[#70737A] uppercase mt-1">
+              TECH MEDIA & INTELLIGENCE
             </span>
           </div>
 
-          <h2 className="text-xl font-bold tracking-tight text-white font-mono uppercase">
-            {mode === "signup" && "Create your account"}
-            {mode === "login" && "Welcome back"}
-            {mode === "forgot" && "Reset Password"}
-            {mode === "reset" && "New Password"}
+          <h2 className="text-base font-bold tracking-tight text-[#F5F5F5] uppercase">
+            {mode === "signup" && "Create Reader Account"}
+            {mode === "login" && "Access Your Account"}
+            {mode === "forgot" && "Reset Security Key"}
+            {mode === "reset" && "Set New Password"}
           </h2>
 
-          <p className="text-xs text-slate-400 mt-1">
-            {mode === "signup" && "Join the global technology intelligence community"}
-            {mode === "login" && "Log in to access your saved stories and community publishing"}
-            {mode === "forgot" && "Enter your registered email address to receive a secure link"}
-            {mode === "reset" && "Choose a strong password with at least 8 characters"}
+          <p className="text-xs text-[#A7A9AD] mt-1 font-sans">
+            {mode === "signup" && "Join the verified global technology journalism community."}
+            {mode === "login" && "Sign in to access your saved coverage, tips, and dispatches."}
+            {mode === "forgot" && "Enter your registered email address to receive an authorization link."}
+            {mode === "reset" && "Choose a strong password with at least 8 characters."}
           </p>
 
           {requiredForAction && (
-            <div className="mt-3 p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-xs text-sky-300 font-mono flex items-center justify-center gap-2">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="mt-3 p-2 rounded-md bg-[#111317] border border-[#2F80FF]/30 text-xs text-[#2F80FF] font-mono flex items-center justify-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{requiredForAction}</span>
             </div>
           )}
@@ -259,7 +258,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         {successMsg && (
-          <div className="mx-6 sm:mx-8 mb-3 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/35 text-xs text-emerald-300 flex items-center gap-2 font-mono">
+          <div className="mx-6 sm:mx-8 mb-3 p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2 font-mono">
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
             <span>{successMsg}</span>
           </div>
@@ -270,11 +269,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {/* Sign Up: Full Name */}
           {mode === "signup" && (
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+              <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
                 Full Name
               </label>
               <div className="relative">
-                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#70737A] pointer-events-none" />
                 <input
                   type="text"
                   required
@@ -284,7 +283,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     setError(null);
                   }}
                   placeholder="Elena Rostova"
-                  className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-xl bg-[#0a1738]/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-sans"
+                  className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] focus:ring-1 focus:ring-[#2F80FF] transition-all font-sans"
                 />
               </div>
             </div>
@@ -293,11 +292,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {/* Email: for Login, Signup, and Forgot */}
           {mode !== "reset" && (
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+              <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#70737A] pointer-events-none" />
                 <input
                   type="email"
                   required
@@ -307,7 +306,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     setError(null);
                   }}
                   placeholder="engineer@domain.com"
-                  className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm rounded-xl bg-[#0a1738]/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-sans"
+                  className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] focus:ring-1 focus:ring-[#2F80FF] transition-all font-sans"
                 />
               </div>
             </div>
@@ -317,7 +316,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {mode !== "forgot" && (
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400">
+                <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD]">
                   {mode === "reset" ? "New Password" : "Password"}
                 </label>
                 {mode === "login" && (
@@ -328,7 +327,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       setError(null);
                       setSuccessMsg(null);
                     }}
-                    className="text-[11px] font-sans text-sky-400 hover:underline"
+                    className="text-[11px] font-sans text-[#2F80FF] hover:underline"
                   >
                     Forgot password?
                   </button>
@@ -344,7 +343,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 placeholder="••••••••"
               />
               {mode === "signup" && (
-                <div className="text-[10px] text-slate-500 font-mono mt-1">
+                <div className="text-[10px] text-[#70737A] font-mono mt-1">
                   Must be at least 8 characters
                 </div>
               )}
@@ -354,7 +353,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           {/* Confirm Password: for Signup & Reset */}
           {(mode === "signup" || mode === "reset") && (
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+              <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
                 Confirm Password
               </label>
               <PasswordInput
@@ -376,14 +375,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 type="checkbox"
                 checked={agreeTerms}
                 onChange={(e) => setAgreeTerms(e.target.checked)}
-                className="w-4 h-4 mt-0.5 rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-sky-500 cursor-pointer"
+                className="w-4 h-4 mt-0.5 rounded border-[#202328] bg-[#111317] text-[#2F80FF] focus:ring-[#2F80FF] cursor-pointer"
               />
-              <label htmlFor="agree-terms" className="text-xs text-slate-300 select-none cursor-pointer leading-tight">
+              <label htmlFor="agree-terms" className="text-xs text-[#A7A9AD] select-none cursor-pointer leading-tight">
                 I agree to the{" "}
                 <Link
                   href="/terms"
                   target="_blank"
-                  className="text-sky-400 hover:underline font-medium"
+                  className="text-[#2F80FF] hover:underline font-medium"
                 >
                   Terms of Service
                 </Link>{" "}
@@ -391,7 +390,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <Link
                   href="/privacy"
                   target="_blank"
-                  className="text-sky-400 hover:underline font-medium"
+                  className="text-[#2F80FF] hover:underline font-medium"
                 >
                   Privacy Policy
                 </Link>
@@ -403,7 +402,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 py-3 px-4 rounded-xl bg-sky-500 hover:bg-sky-400 disabled:opacity-60 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(56,189,248,0.4)] transition-all hover:scale-[1.01]"
+            className="w-full mt-2 py-2.5 px-4 rounded-md bg-[#2F80FF] hover:bg-[#2566CC] disabled:opacity-60 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             {isLoading ? (
               <div className="flex items-center gap-2">
@@ -419,9 +418,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="flex items-center gap-2">
                 <span>
                   {mode === "login" && "Log In"}
-                  {mode === "signup" && "Create Account"}
-                  {mode === "forgot" && "Send Reset Link"}
-                  {mode === "reset" && "Save New Password"}
+                  {mode === "signup" && "Create Reader Account"}
+                  {mode === "forgot" && "Send Authorization Link"}
+                  {mode === "reset" && "Save Password"}
                 </span>
                 <ArrowRight className="w-4 h-4" />
               </div>
@@ -434,7 +433,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={handleQuickDemoFill}
-                className="text-[11px] font-mono text-sky-400/90 hover:underline"
+                className="text-[11px] font-mono text-[#70737A] hover:text-[#2F80FF] transition-colors underline"
               >
                 Use Demo Account (alex@nexbytees.com)
               </button>
@@ -442,7 +441,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           )}
 
           {/* Switchers */}
-          <div className="text-center pt-3 border-t border-slate-800/80 text-xs text-slate-400">
+          <div className="text-center pt-3 border-t border-[#202328] text-xs text-[#70737A]">
             {mode === "signup" && (
               <div>
                 Already have an account?{" "}
@@ -453,7 +452,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     setError(null);
                     setSuccessMsg(null);
                   }}
-                  className="text-sky-400 font-semibold hover:underline ml-1"
+                  className="text-[#2F80FF] font-semibold hover:underline ml-1"
                 >
                   Log in
                 </button>
@@ -470,7 +469,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     setError(null);
                     setSuccessMsg(null);
                   }}
-                  className="text-sky-400 font-semibold hover:underline ml-1"
+                  className="text-[#2F80FF] font-semibold hover:underline ml-1"
                 >
                   Sign up
                 </button>
@@ -487,7 +486,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     setError(null);
                     setSuccessMsg(null);
                   }}
-                  className="text-sky-400 font-semibold hover:underline ml-1"
+                  className="text-[#2F80FF] font-semibold hover:underline ml-1"
                 >
                   Back to Log In
                 </button>

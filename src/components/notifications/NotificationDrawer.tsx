@@ -137,19 +137,19 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
         animate={{ x: 0 }}
         exit={{ x: "100%" }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="relative z-10 w-full max-w-md bg-[#091124] border-l border-slate-800 h-full flex flex-col shadow-2xl text-slate-100"
+        className="relative z-10 w-full max-w-md bg-[#0B0D10] border-l border-[#202328] h-full flex flex-col shadow-2xl text-[#F5F5F5]"
       >
         {/* Top Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/60 backdrop-blur-md">
+        <div className="p-5 border-b border-[#202328] flex items-center justify-between bg-[#0E1013]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+            <div className="w-8 h-8 rounded-md bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF]">
               <Bell className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-sm font-bold text-[#F5F5F5] tracking-tight flex items-center gap-2 uppercase font-mono">
                 <span>Intelligence Alerts</span>
                 {unreadCount > 0 && (
-                  <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-sky-500 text-slate-950 font-bold">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#2F80FF] text-white font-bold">
                     {unreadCount}
                   </span>
                 )}
@@ -161,7 +161,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-[11px] font-mono text-sky-400 hover:text-sky-300 flex items-center gap-1 px-2 py-1 rounded hover:bg-sky-500/10 transition-colors"
+                className="text-[11px] font-mono text-[#2F80FF] hover:underline flex items-center gap-1 px-2 py-1 transition-colors cursor-pointer"
                 title="Mark all as read"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
@@ -171,7 +171,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
+              className="p-1.5 rounded-md bg-[#111317] border border-[#202328] text-[#70737A] hover:text-[#F5F5F5] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -181,14 +181,14 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
         {/* Notifications Body */}
         <div className="flex-1 overflow-y-auto p-5 space-y-3">
           {loading ? (
-            <div className="py-16 text-center text-xs font-mono text-slate-500">
+            <div className="py-16 text-center text-xs font-mono text-[#70737A]">
               Synchronizing intelligence alerts...
             </div>
           ) : notifications.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6">
-              <Bell className="w-12 h-12 text-slate-700 mb-3" />
-              <h3 className="text-sm font-semibold text-white">All caught up</h3>
-              <p className="text-xs text-slate-500 mt-1 max-w-xs">
+              <Bell className="w-10 h-10 text-[#70737A]/40 mb-3" />
+              <h3 className="text-sm font-semibold text-[#F5F5F5]">All caught up</h3>
+              <p className="text-xs text-[#70737A] mt-1 max-w-xs">
                 No new intelligence notifications at this time. You will be alerted when other contributors interact with your submissions.
               </p>
             </div>
@@ -198,31 +198,31 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                 key={item.id}
                 onClick={() => !item.isRead && handleMarkAsRead(item.id)}
                 className={cn(
-                  "p-3.5 rounded-xl border transition-all duration-200 cursor-pointer flex items-start gap-3",
+                  "p-3.5 rounded-md border transition-all duration-200 cursor-pointer flex items-start gap-3",
                   item.isRead
-                    ? "bg-[#0b1428]/40 border-slate-800/60 text-slate-400"
-                    : "bg-[#0c1a3c]/70 border-sky-500/40 text-slate-200 shadow-[0_0_15px_rgba(56,189,248,0.1)]"
+                    ? "bg-[#111317] border-[#202328] text-[#70737A]"
+                    : "bg-[#15171B] border-[#2F80FF]/40 text-[#F5F5F5]"
                 )}
               >
-                <div className="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-7 h-7 rounded-md bg-[#0E1013] border border-[#202328] flex items-center justify-center shrink-0 mt-0.5">
                   {getIcon(item.type)}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <h4 className={cn("text-xs font-bold truncate", !item.isRead && "text-white")}>
+                    <h4 className={cn("text-xs font-bold truncate", !item.isRead ? "text-[#F5F5F5]" : "text-[#A7A9AD]")}>
                       {item.title}
                     </h4>
                     {!item.isRead && (
-                      <span className="w-2 h-2 rounded-full bg-sky-400 shrink-0 shadow-[0_0_8px_rgba(56,189,248,0.8)]" />
+                      <span className="w-2 h-2 rounded-full bg-[#2F80FF] shrink-0" />
                     )}
                   </div>
 
-                  <p className="text-[11px] text-slate-400 mt-1 leading-relaxed line-clamp-2">
+                  <p className="text-[11px] text-[#A7A9AD] mt-1 leading-relaxed line-clamp-2">
                     {item.message}
                   </p>
 
-                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-800/40 text-[10px] font-mono text-slate-500">
+                  <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-[#202328] text-[10px] font-mono text-[#70737A]">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       <span>{formatTimeAgo(item.createdAt)}</span>
@@ -234,7 +234,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                           e.stopPropagation();
                           handleMarkAsRead(item.id);
                         }}
-                        className="text-sky-400 hover:text-sky-300 font-semibold"
+                        className="text-[#2F80FF] hover:underline font-semibold"
                       >
                         Mark read
                       </button>

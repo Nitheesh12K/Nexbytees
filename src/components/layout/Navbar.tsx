@@ -32,6 +32,8 @@ interface NavbarProps {
   onOpenNotifications?: () => void;
   unreadNotificationsCount?: number;
   onSyncNews?: () => void;
+  selectedDomain?: string | null;
+  onSelectDomain?: (domain: string | null) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -48,11 +50,42 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenNotifications,
   unreadNotificationsCount = 0,
   onSyncNews,
+  selectedDomain,
+  onSelectDomain,
 }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const EDITORIAL_DESKS = [
+    { label: "Latest", type: "section" as const, id: "latest" },
+    { label: "Trending", type: "section" as const, id: "trending" },
+    { label: "AI", type: "domain" as const, id: "AI" },
+    { label: "Cybersecurity", type: "domain" as const, id: "Cybersecurity" },
+    { label: "Robotics", type: "domain" as const, id: "Robotics" },
+    { label: "Science", type: "domain" as const, id: "Science" },
+    { label: "Business", type: "domain" as const, id: "Business" },
+    { label: "Space", type: "domain" as const, id: "Space" },
+    { label: "Programming", type: "domain" as const, id: "Programming" },
+  ];
+
+  const handleDeskClick = (desk: { label: string; type: "section" | "domain"; id: string }) => {
+    if (desk.type === "domain") {
+      if (onSelectDomain) {
+        onSelectDomain(desk.id);
+      }
+      const el = document.getElementById("latest");
+      el?.scrollIntoView({ behavior: "smooth" });
+    } else if (desk.id === "latest") {
+      if (onSelectDomain) {
+        onSelectDomain(null);
+      }
+      onNavigate("latest");
+    } else {
+      onNavigate(desk.id);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,64 +158,34 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center Editorial Navigation Desks */}
-        <nav className="hidden md:flex items-center gap-7 text-xs font-semibold tracking-wide uppercase">
-          <button
-            onClick={() => onNavigate("home")}
-            className={cn(
-              "relative py-1 transition-colors",
-              activeNav === "home" ? "text-[#F5F5F5]" : "text-[#A7A9AD] hover:text-[#F5F5F5]"
-            )}
-          >
-            <span>Home</span>
-            {activeNav === "home" && (
-              <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2F80FF]" />
-            )}
-          </button>
-
-          <button
-            onClick={() => onNavigate("trending")}
-            className={cn(
-              "relative py-1 transition-colors",
-              activeNav === "trending" ? "text-[#F5F5F5]" : "text-[#A7A9AD] hover:text-[#F5F5F5]"
-            )}
-          >
-            <span>Trending</span>
-            {activeNav === "trending" && (
-              <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2F80FF]" />
-            )}
-          </button>
-
-          <button
-            onClick={() => onNavigate("domains")}
-            className={cn(
-              "relative py-1 transition-colors",
-              activeNav === "domains" ? "text-[#F5F5F5]" : "text-[#A7A9AD] hover:text-[#F5F5F5]"
-            )}
-          >
-            <span>Domains</span>
-            {activeNav === "domains" && (
-              <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2F80FF]" />
-            )}
-          </button>
-
-          <button
-            onClick={() => onNavigate("latest")}
-            className={cn(
-              "relative py-1 transition-colors",
-              activeNav === "latest" ? "text-[#F5F5F5]" : "text-[#A7A9AD] hover:text-[#F5F5F5]"
-            )}
-          >
-            <span>Latest</span>
-            {activeNav === "latest" && (
-              <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2F80FF]" />
-            )}
-          </button>
+        <nav className="hidden md:flex items-center gap-4 lg:gap-5 xl:gap-6 text-xs font-semibold tracking-wide uppercase overflow-x-auto no-scrollbar scroll-smooth">
+          {EDITORIAL_DESKS.map((desk) => {
+            const isActive =
+              desk.type === "section"
+                ? activeNav === desk.id && !selectedDomain
+                : selectedDomain?.toLowerCase() === desk.id.toLowerCase();
+            return (
+              <button
+                key={desk.id}
+                onClick={() => handleDeskClick(desk)}
+                className={cn(
+                  "relative py-1 transition-colors whitespace-nowrap",
+                  isActive ? "text-[#F5F5F5]" : "text-[#A7A9AD] hover:text-[#F5F5F5]"
+                )}
+              >
+                <span>{desk.label}</span>
+                {isActive && (
+                  <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#2F80FF]" />
+                )}
+              </button>
+            );
+          })}
 
           <button
             onClick={handleUploadClick}
-            className="relative py-1 text-[#2F80FF] hover:text-[#70A6FF] transition-colors"
+            className="relative py-1 text-[#2F80FF] hover:text-[#70A6FF] transition-colors whitespace-nowrap pl-2 border-l border-[#202328]"
           >
-            <span>Dispatch / Submit</span>
+            <span>Submit Story</span>
           </button>
         </nav>
 
@@ -360,57 +363,132 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0B0D10] border-b border-[#202328] px-6 py-4 space-y-3 text-xs">
-          <button
-            onClick={() => {
-              onNavigate("home");
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-1 text-[#F5F5F5] font-semibold"
-          >
-            Home
-          </button>
-          <button
-            onClick={() => {
-              onNavigate("trending");
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-1 text-[#A7A9AD]"
-          >
-            Trending
-          </button>
-          <button
-            onClick={() => {
-              onNavigate("domains");
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-1 text-[#A7A9AD]"
-          >
-            Domains
-          </button>
-          <button
-            onClick={() => {
-              onNavigate("latest");
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-1 text-[#A7A9AD]"
-          >
-            Latest
-          </button>
-          <button
-            onClick={() => {
-              handleUploadClick();
-              setMobileMenuOpen(false);
-            }}
-            className="block w-full text-left py-1 text-[#2F80FF] font-semibold"
-          >
-            Submit Story
-          </button>
+        <div className="md:hidden bg-[#0B0D10] border-b border-[#202328] px-6 py-5 space-y-4 text-xs animate-in slide-in-from-top-2 duration-200">
+          <div>
+            <div className="text-[10px] font-mono tracking-widest text-[#70737A] uppercase mb-2">
+              SECTIONS
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => {
+                  onNavigate("home");
+                  setMobileMenuOpen(false);
+                }}
+                className={cn(
+                  "text-left py-2 px-3 rounded border text-xs font-semibold transition-colors",
+                  activeNav === "home" && !selectedDomain
+                    ? "border-[#2F80FF] text-white bg-[#111317]"
+                    : "border-[#202328] text-[#A7A9AD] hover:text-white"
+                )}
+              >
+                Home
+              </button>
+              <button
+                onClick={() => {
+                  onNavigate("trending");
+                  setMobileMenuOpen(false);
+                }}
+                className={cn(
+                  "text-left py-2 px-3 rounded border text-xs font-semibold transition-colors",
+                  activeNav === "trending"
+                    ? "border-[#2F80FF] text-white bg-[#111317]"
+                    : "border-[#202328] text-[#A7A9AD] hover:text-white"
+                )}
+              >
+                Trending
+              </button>
+              <button
+                onClick={() => {
+                  if (onSelectDomain) onSelectDomain(null);
+                  onNavigate("latest");
+                  setMobileMenuOpen(false);
+                }}
+                className={cn(
+                  "text-left py-2 px-3 rounded border text-xs font-semibold transition-colors",
+                  activeNav === "latest" && !selectedDomain
+                    ? "border-[#2F80FF] text-white bg-[#111317]"
+                    : "border-[#202328] text-[#A7A9AD] hover:text-white"
+                )}
+              >
+                Latest Wire
+              </button>
+              <button
+                onClick={() => {
+                  onOpenSaved();
+                  setMobileMenuOpen(false);
+                }}
+                className="flex items-center justify-between text-left py-2 px-3 rounded border border-[#202328] text-[#A7A9AD] hover:text-white"
+              >
+                <span>Saved Stories</span>
+                {savedCount > 0 && (
+                  <span className="font-mono text-[10px] text-[#2F80FF] bg-[#111317] px-1.5 py-0.5 rounded">
+                    {savedCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
 
-          <div className="pt-2 border-t border-[#202328]">
+          <div>
+            <div className="text-[10px] font-mono tracking-widest text-[#70737A] uppercase mb-2">
+              EDITORIAL DESKS
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {[
+                "AI",
+                "Cybersecurity",
+                "Robotics",
+                "Science",
+                "Business",
+                "Space",
+                "Programming",
+              ].map((domain) => {
+                const isActive = selectedDomain?.toLowerCase() === domain.toLowerCase();
+                return (
+                  <button
+                    key={domain}
+                    onClick={() => {
+                      if (onSelectDomain) onSelectDomain(domain);
+                      const el = document.getElementById("latest");
+                      el?.scrollIntoView({ behavior: "smooth" });
+                      setMobileMenuOpen(false);
+                    }}
+                    className={cn(
+                      "text-left py-2 px-3 rounded border text-xs font-medium transition-colors truncate",
+                      isActive
+                        ? "border-[#2F80FF] text-white bg-[#111317]"
+                        : "border-[#202328] text-[#A7A9AD] hover:text-white bg-[#0E1013]"
+                    )}
+                  >
+                    {domain}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-[#202328] flex items-center justify-between">
+            <button
+              onClick={() => {
+                handleUploadClick();
+                setMobileMenuOpen(false);
+              }}
+              className="py-1.5 px-3 rounded bg-[#2F80FF] text-white font-bold text-xs hover:bg-[#2566CC] transition-colors"
+            >
+              Submit Story / Tip
+            </button>
+
             {user ? (
-              <div className="flex items-center justify-between py-1">
-                <span className="text-[#A7A9AD] font-medium">{user.name}</span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => {
+                    onOpenProfile("settings");
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-[#A7A9AD] hover:text-white font-medium"
+                >
+                  {user.name}
+                </button>
                 <button
                   onClick={() => {
                     onLogout();

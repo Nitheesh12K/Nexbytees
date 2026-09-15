@@ -121,29 +121,31 @@ export const UploadModal: React.FC<UploadModalProps> = ({
         className="fixed inset-0 bg-black/85 backdrop-blur-md"
       />
 
-      {/* 3D Glass Upload Panel */}
+      {/* Editorial Upload Panel */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 25 }}
+        initial={{ opacity: 0, scale: 0.98, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        exit={{ opacity: 0, scale: 0.98, y: 10 }}
         className={cn(
-          "relative w-full max-w-3xl bg-[#091124]/95 border border-sky-500/30 rounded-2xl",
-          "shadow-[0_20px_70px_rgba(0,0,0,0.9)] backdrop-blur-xl z-10 overflow-hidden flex flex-col text-slate-100 max-h-[92vh]"
+          "relative w-full max-w-3xl bg-[#0B0D10] border border-[#202328] rounded-md",
+          "shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-10 overflow-hidden flex flex-col text-[#F5F5F5] max-h-[92vh]"
         )}
       >
         {/* Header */}
-        <div className="px-6 py-5 border-b border-slate-800/80 flex items-center justify-between bg-slate-900/60">
+        <div className="px-6 py-4 border-b border-[#202328] flex items-center justify-between bg-[#0E1013]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
-              <Sparkles className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-md bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF]">
+              <UploadCloud className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2.5">
-                <span>Submit Technology Story</span>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-[#F5F5F5] uppercase tracking-tight">
+                  Submit Technology Story
+                </h2>
                 <CommunityBadge />
-              </h2>
-              <p className="text-xs text-slate-400">
-                Publish verified breakthroughs, releases, or research dispatches to the community feed.
+              </div>
+              <p className="text-xs text-[#70737A]">
+                Publish verified breakthroughs, releases, or research dispatches to the community wire.
               </p>
             </div>
           </div>
@@ -153,10 +155,10 @@ export const UploadModal: React.FC<UploadModalProps> = ({
               type="button"
               onClick={() => setIsPreviewActive(!isPreviewActive)}
               className={cn(
-                "hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border transition-colors",
+                "hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono border transition-colors",
                 isPreviewActive
-                  ? "bg-sky-500/20 border-sky-500 text-sky-300"
-                  : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
+                  ? "bg-[#15171B] border-[#2F80FF] text-white"
+                  : "bg-[#111317] border-[#202328] text-[#A7A9AD] hover:text-white"
               )}
             >
               <Eye className="w-3.5 h-3.5" />
@@ -165,7 +167,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
 
             <button
               onClick={onClose}
-              className="p-2 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white transition-colors"
+              className="p-1.5 rounded-md bg-[#111317] border border-[#202328] text-[#70737A] hover:text-white transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -177,34 +179,34 @@ export const UploadModal: React.FC<UploadModalProps> = ({
           {isPreviewActive ? (
             /* Live Preview Mode */
             <div className="space-y-4">
-              <div className="text-xs font-mono text-slate-400 flex items-center gap-2">
+              <div className="text-xs font-mono text-[#70737A] flex items-center gap-2">
                 <Radio className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-                <span>REAL-TIME CARD PREVIEW</span>
+                <span>REAL-TIME EDITORIAL CARD PREVIEW</span>
               </div>
 
-              <div className="max-w-md mx-auto rounded-2xl border border-sky-500/40 bg-gradient-to-b from-[#0e1b38] to-[#040816] p-5 shadow-2xl">
-                <div className="relative w-full h-44 rounded-xl overflow-hidden mb-4 border border-slate-800 bg-slate-950">
+              <div className="max-w-md mx-auto rounded-md border border-[#202328] bg-[#111317] p-5 shadow-2xl">
+                <div className="relative w-full h-44 rounded-md overflow-hidden mb-4 border border-[#202328] bg-[#0B0D10]">
                   <img
                     src={formData.imageUrl}
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-black/70 text-sky-300 border border-white/10">
+                    <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-sm bg-[#08090B]/90 text-[#2F80FF] border border-[#202328]">
                       {formData.domain}
                     </span>
                     <CommunityBadge />
                   </div>
                 </div>
 
-                <h3 className="text-base font-bold text-white leading-snug">
+                <h3 className="text-base font-bold text-[#F5F5F5] leading-snug">
                   {formData.title || "Your headline will appear here..."}
                 </h3>
-                <p className="mt-2 text-xs text-slate-400 line-clamp-3 leading-relaxed">
+                <p className="mt-2 text-xs text-[#A7A9AD] line-clamp-3 leading-relaxed">
                   {formData.description || "Your 2-3 line summary and technical context will appear here..."}
                 </p>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                <div className="mt-4 pt-3 border-t border-[#202328] flex items-center justify-between text-[11px] font-mono text-[#70737A]">
                   <span>{formData.source || "Community Contributor"}</span>
                   <span>Just now</span>
                 </div>
@@ -215,8 +217,8 @@ export const UploadModal: React.FC<UploadModalProps> = ({
             <form id="upload-form" onSubmit={handleSubmit} className="space-y-5">
               {/* Drag & Drop Image Area */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2">
-                  Featured Story Imagery
+                <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
+                  Featured Story Photography
                 </label>
                 <div
                   onDragOver={(e) => {
@@ -227,10 +229,10 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   onDrop={handleFileDrop}
                   onClick={() => fileInputRef.current?.click()}
                   className={cn(
-                    "relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2",
+                    "relative border-2 border-dashed rounded-md p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-2",
                     dragOver
-                      ? "border-sky-400 bg-sky-500/10"
-                      : "border-slate-800 bg-slate-900/40 hover:border-slate-700 hover:bg-slate-900/70"
+                      ? "border-[#2F80FF] bg-[#2F80FF]/10"
+                      : "border-[#202328] bg-[#0E1013] hover:border-[#2F80FF] hover:bg-[#111317]"
                   )}
                 >
                   <input
@@ -240,18 +242,18 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                     onChange={handleFileInput}
                     className="hidden"
                   />
-                  <UploadCloud className="w-8 h-8 text-sky-400 mb-1" />
-                  <div className="text-xs text-slate-300 font-medium">
-                    Drag and drop an image, or <span className="text-sky-400 underline">browse files</span>
+                  <UploadCloud className="w-7 h-7 text-[#2F80FF] mb-1" />
+                  <div className="text-xs text-[#F5F5F5] font-medium">
+                    Drag and drop an editorial image, or <span className="text-[#2F80FF] underline">browse local files</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 font-mono">
-                    PNG, JPG, WebP up to 10MB
+                  <div className="text-[10px] text-[#70737A] font-mono">
+                    PNG, JPG, WebP (16:9 news photography recommended)
                   </div>
                 </div>
 
                 {/* Preset Thumbnails */}
-                <div className="mt-3">
-                  <span className="text-[11px] font-mono text-slate-500 mr-2">Quick Presets:</span>
+                <div className="mt-2.5">
+                  <span className="text-[10px] font-mono text-[#70737A] mr-2 uppercase">Stock Presets:</span>
                   <div className="inline-flex flex-wrap gap-2 mt-1">
                     {PRESET_IMAGES.map((preset) => (
                       <button
@@ -259,10 +261,10 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                         type="button"
                         onClick={() => setFormData((p) => ({ ...p, imageUrl: preset.url }))}
                         className={cn(
-                          "text-[11px] px-2.5 py-1 rounded-lg border font-mono transition-colors",
+                          "text-[10px] px-2.5 py-1 rounded-md border font-mono transition-colors",
                           formData.imageUrl === preset.url
-                            ? "bg-sky-500/20 border-sky-400 text-sky-300"
-                            : "bg-slate-900 border-slate-800 text-slate-400 hover:text-white"
+                            ? "bg-[#15171B] border-[#2F80FF] text-[#F5F5F5]"
+                            : "bg-[#111317] border-[#202328] text-[#70737A] hover:text-[#A7A9AD]"
                         )}
                       >
                         {preset.label}
@@ -274,7 +276,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
 
               {/* Headline */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+                <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
                   Headline <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -283,25 +285,25 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="e.g. Next-Generation Neuromorphic Chip Achieves Sub-Milliwatt Vision Inference"
-                  className="w-full px-4 py-2.5 text-sm rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-sans"
+                  className="w-full px-3.5 py-2 text-xs sm:text-sm rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] focus:ring-1 focus:ring-[#2F80FF] transition-all font-sans"
                 />
               </div>
 
               {/* Domain & Source row */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                    Technology Domain <span className="text-rose-400">*</span>
+                  <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
+                    Technology Domain / Desk <span className="text-rose-400">*</span>
                   </label>
                   <select
                     value={formData.domain}
                     onChange={(e) =>
                       setFormData({ ...formData, domain: e.target.value as TechnologyDomain })
                     }
-                    className="w-full px-4 py-2.5 text-xs rounded-xl bg-slate-900 border border-slate-800 text-slate-200 focus:outline-none focus:border-sky-500 font-sans cursor-pointer"
+                    className="w-full px-3.5 py-2 text-xs rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] focus:outline-none focus:border-[#2F80FF] font-sans cursor-pointer"
                   >
                     {TECHNOLOGY_DOMAINS.map((dom) => (
-                      <option key={dom.name} value={dom.name}>
+                      <option key={dom.name} value={dom.name} className="bg-[#111317] text-[#F5F5F5]">
                         {dom.name}
                       </option>
                     ))}
@@ -309,7 +311,7 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+                  <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
                     Source / Lab / Organization
                   </label>
                   <input
@@ -317,15 +319,15 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                     value={formData.source}
                     onChange={(e) => setFormData({ ...formData, source: e.target.value })}
                     placeholder="e.g. Stanford AI Lab, CERN, DeepMind"
-                    className="w-full px-4 py-2.5 text-xs rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all font-sans"
+                    className="w-full px-3.5 py-2 text-xs rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] transition-all font-sans"
                   />
                 </div>
               </div>
 
               {/* Short Summary Description */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Executive Summary (2–3 sentences) <span className="text-rose-400">*</span>
+                <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
+                  Standfirst / Executive Summary (2–3 sentences) <span className="text-rose-400">*</span>
                 </label>
                 <textarea
                   required
@@ -333,35 +335,35 @@ export const UploadModal: React.FC<UploadModalProps> = ({
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Summarize the core engineering discovery, architectural shift, benchmark metric, or release..."
-                  className="w-full px-4 py-2.5 text-xs md:text-sm rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-sans leading-relaxed"
+                  className="w-full px-3.5 py-2 text-xs md:text-sm rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] focus:ring-1 focus:ring-[#2F80FF] transition-all font-sans leading-relaxed"
                 />
               </div>
 
               {/* Extended Content (Optional) */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Full Article Body (Optional)
+                <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
+                  Full Dispatch Body (Optional)
                 </label>
                 <textarea
                   rows={4}
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                   placeholder="Detailed multi-paragraph technical breakdown, methodology, or benchmark citations..."
-                  className="w-full px-4 py-2.5 text-xs md:text-sm rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all font-sans leading-relaxed"
+                  className="w-full px-3.5 py-2 text-xs md:text-sm rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] transition-all font-sans leading-relaxed"
                 />
               </div>
 
               {/* Tags */}
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Tags (Comma-separated)
+                <label className="block text-[10px] font-mono uppercase tracking-wider text-[#A7A9AD] mb-1.5">
+                  Indexed Tags (Comma-separated)
                 </label>
                 <input
                   type="text"
                   value={formData.tags}
                   onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                   placeholder="Hardware, Neuromorphic, LowPower, Silicon"
-                  className="w-full px-4 py-2.5 text-xs rounded-xl bg-slate-900/80 border border-slate-800 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all font-sans"
+                  className="w-full px-3.5 py-2 text-xs rounded-md bg-[#111317] border border-[#202328] text-[#F5F5F5] placeholder-[#70737A] focus:outline-none focus:border-[#2F80FF] transition-all font-sans"
                 />
               </div>
             </form>
@@ -369,16 +371,16 @@ export const UploadModal: React.FC<UploadModalProps> = ({
         </div>
 
         {/* Footer actions */}
-        <div className="px-6 py-4 border-t border-slate-800/80 bg-slate-900/70 flex items-center justify-between">
-          <div className="text-[11px] font-mono text-slate-500">
-            Frontend-only • Stored locally in browser
+        <div className="px-6 py-3.5 border-t border-[#202328] bg-[#0E1013] flex items-center justify-between">
+          <div className="text-[10px] font-mono text-[#70737A]">
+            COMMUNITY DISPATCH · STORED LOCALLY
           </div>
 
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-slate-800 text-xs font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="px-3.5 py-2 rounded-md border border-[#202328] text-xs font-medium text-[#A7A9AD] hover:text-white hover:bg-[#111317] transition-colors"
             >
               Cancel
             </button>
@@ -386,10 +388,10 @@ export const UploadModal: React.FC<UploadModalProps> = ({
             <button
               type="submit"
               form="upload-form"
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-xs font-bold shadow-[0_0_20px_rgba(56,189,248,0.4)] transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-[#2F80FF] hover:bg-[#2566CC] text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>PUBLISH STORY</span>
+              <span>PUBLISH DISPATCH</span>
             </button>
           </div>
         </div>

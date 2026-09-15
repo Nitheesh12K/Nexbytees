@@ -41,14 +41,14 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
       {/* Dialog */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 15 }}
+        initial={{ opacity: 0, scale: 0.98, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 15 }}
-        className="relative w-full max-w-sm bg-[#091124] border border-slate-800 rounded-2xl shadow-2xl p-6 z-10 text-slate-100 overflow-hidden"
+        exit={{ opacity: 0, scale: 0.98, y: 10 }}
+        className="relative w-full max-w-sm bg-[#0B0D10] border border-[#202328] rounded-md shadow-[0_20px_60px_rgba(0,0,0,0.9)] p-6 z-10 text-[#F5F5F5] overflow-hidden"
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white p-1 rounded"
+          className="absolute top-4 right-4 text-[#70737A] hover:text-white p-1.5 rounded-md bg-[#111317] border border-[#202328] transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -56,31 +56,31 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <div className="flex flex-col items-center text-center">
           <div
             className={cn(
-              "w-12 h-12 rounded-2xl flex items-center justify-center mb-4",
+              "w-11 h-11 rounded-md flex items-center justify-center mb-4",
               variant === "danger"
-                ? "bg-rose-500/15 border border-rose-500/35 text-rose-400"
-                : "bg-amber-500/15 border border-amber-500/35 text-amber-400"
+                ? "bg-rose-500/10 border border-rose-500/30 text-rose-400"
+                : "bg-amber-500/10 border border-amber-500/30 text-amber-400"
             )}
           >
             {variant === "danger" ? (
-              <AlertTriangle className="w-6 h-6" />
+              <AlertTriangle className="w-5 h-5" />
             ) : (
-              <LogOut className="w-6 h-6" />
+              <LogOut className="w-5 h-5" />
             )}
           </div>
 
-          <h3 className="text-base font-bold text-white tracking-wider font-mono uppercase">
+          <h3 className="text-sm font-bold text-[#F5F5F5] tracking-wide font-mono uppercase">
             {title}
           </h3>
 
-          <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+          <p className="text-xs text-[#A7A9AD] mt-2 leading-relaxed">
             {description}
           </p>
 
           <div className="grid grid-cols-2 gap-3 w-full mt-6">
             <button
               onClick={onClose}
-              className="py-2.5 px-4 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-slate-300 transition-colors"
+              className="py-2 px-4 rounded-md border border-[#202328] bg-[#111317] hover:bg-[#15171B] text-xs font-semibold text-[#A7A9AD] hover:text-white transition-colors cursor-pointer"
             >
               {cancelText}
             </button>
@@ -91,10 +91,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 onClose();
               }}
               className={cn(
-                "py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-lg",
+                "py-2 px-4 rounded-md text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer",
                 variant === "danger"
-                  ? "bg-rose-600 hover:bg-rose-500 text-white shadow-rose-900/30"
-                  : "bg-sky-500 hover:bg-sky-400 text-slate-950 shadow-sky-900/30"
+                  ? "bg-rose-600 hover:bg-rose-500 text-white"
+                  : "bg-[#2F80FF] hover:bg-[#2566CC] text-white"
               )}
             >
               {confirmText}
