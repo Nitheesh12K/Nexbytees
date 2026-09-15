@@ -1,489 +1,688 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { Brain, Bot, Atom, Rocket } from "lucide-react";
+import {
+  Globe2,
+  Radio,
+  ExternalLink,
+  RotateCcw,
+  Sparkles,
+  Layers,
+} from "lucide-react";
 
 interface HeroGlobe3DProps {
   onSelectDomain: (domain: string) => void;
 }
 
+interface TechHub {
+  id: string;
+  name: string;
+  country: string;
+  lat: number;
+  lon: number;
+  domain: string;
+  specialty: string;
+  activeStories: number;
+}
+
+const TECH_HUBS: TechHub[] = [
+  {
+    id: "sf",
+    name: "Silicon Valley",
+    country: "USA",
+    lat: 37.77,
+    lon: -122.41,
+    domain: "Artificial Intelligence",
+    specialty: "Frontier Models & Compute",
+    activeStories: 42,
+  },
+  {
+    id: "tokyo",
+    name: "Tokyo",
+    country: "Japan",
+    lat: 35.67,
+    lon: 139.65,
+    domain: "Robotics",
+    specialty: "Humanoid & Micro-Actuators",
+    activeStories: 28,
+  },
+  {
+    id: "london",
+    name: "London",
+    country: "UK",
+    lat: 51.50,
+    lon: -0.12,
+    domain: "Quantum Computing",
+    specialty: "Quantum Algorithms & Policy",
+    activeStories: 19,
+  },
+  {
+    id: "bengaluru",
+    name: "Bengaluru",
+    country: "India",
+    lat: 12.97,
+    lon: 77.59,
+    domain: "Cloud & Software",
+    specialty: "Distributed Systems & Scale",
+    activeStories: 34,
+  },
+  {
+    id: "taipei",
+    name: "Taipei / Hsinchu",
+    country: "Taiwan",
+    lat: 25.03,
+    lon: 121.56,
+    domain: "Semiconductors",
+    specialty: "2nm Silicon & Lithography",
+    activeStories: 31,
+  },
+  {
+    id: "zurich",
+    name: "Zurich / CERN",
+    country: "Switzerland",
+    lat: 46.23,
+    lon: 6.05,
+    domain: "Deep Tech",
+    specialty: "Fundamental Physics & Superconductors",
+    activeStories: 15,
+  },
+  {
+    id: "boston",
+    name: "Boston",
+    country: "USA",
+    lat: 42.36,
+    lon: -71.05,
+    domain: "Biotechnology",
+    specialty: "Neural Interfaces & CRISPR",
+    activeStories: 22,
+  },
+  {
+    id: "singapore",
+    name: "Singapore",
+    country: "Singapore",
+    lat: 1.35,
+    lon: 103.82,
+    domain: "Cybersecurity",
+    specialty: "Zero-Trust & Quantum Encryption",
+    activeStories: 18,
+  },
+];
+
+// Helper: Convert geographic Lat/Lon to 3D Cartesian Vector matching Three.js equirectangular UV
+const latLonToVector3 = (lat: number, lon: number, radius: number): THREE.Vector3 => {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lon + 180) * (Math.PI / 180);
+  const x = -(radius * Math.sin(phi) * Math.cos(theta));
+  const z = radius * Math.sin(phi) * Math.sin(theta);
+  const y = radius * Math.cos(phi);
+  return new THREE.Vector3(x, y, z);
+};
+
 export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
   const mountRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [selectedHub, setSelectedHub] = useState<TechHub | null>(null);
+  const [hoveredHub, setHoveredHub] = useState<TechHub | null>(null);
+  const [hubScreenPos, setHubScreenPos] = useState<{ x: number; y: number } | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [hasWebGL, setHasWebGL] = useState<boolean>(true);
+  const [isInteracting, setIsInteracting] = useState<boolean>(false);
+
+  // References to communicate with render loop
+  const globeRootRef = useRef<THREE.Group | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const activeHubPosRef = useRef<THREE.Vector3 | null>(null);
 
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
 
-    const width = container.clientWidth || 600;
-    const height = container.clientHeight || 600;
-
-    // ─── Scene, Camera, Renderer ───────────────────────────────────────────
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 1000);
-    camera.position.z = 21;
-    camera.position.y = 0.4;
-
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      powerPreference: "high-performance",
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-    container.appendChild(renderer.domElement);
-
-    const globeRoot = new THREE.Group();
-    scene.add(globeRoot);
-
-    // Earth axial tilt: ~23.4°
-    globeRoot.rotation.x = 0.24;
-    globeRoot.rotation.z = -0.1;
-
-    const GLOBE_RADIUS = 5.0;
-
-    // ─── 1. Earth Ocean Core ────────────────────────────────────────────────
-    // Deep realistic ocean: dark navy-blue with slight shimmer
-    const coreGeo = new THREE.SphereGeometry(GLOBE_RADIUS - 0.02, 64, 64);
-    const coreMat = new THREE.MeshPhongMaterial({
-      color: 0x03080f,
-      emissive: 0x010610,
-      emissiveIntensity: 0.5,
-      shininess: 60,
-    });
-    const coreSphere = new THREE.Mesh(coreGeo, coreMat);
-    globeRoot.add(coreSphere);
-
-    // ─── 2. Coordinate Helper ───────────────────────────────────────────────
-    const latLonToVector3 = (lat: number, lon: number, radius: number): THREE.Vector3 => {
-      const phi = (90 - lat) * (Math.PI / 180);
-      const theta = (lon + 180) * (Math.PI / 180);
-      const x = -(radius * Math.sin(phi) * Math.cos(theta));
-      const z = radius * Math.sin(phi) * Math.sin(theta);
-      const y = radius * Math.cos(phi);
-      return new THREE.Vector3(x, y, z);
-    };
-
-    // ─── 3. Land Coordinate Check ───────────────────────────────────────────
-    const isLandCoordinate = (lat: number, lon: number): boolean => {
-      // North America
-      if (lat >= 15 && lat <= 72 && lon >= -168 && lon <= -52) {
-        if (lat < 25 && lon < -95) return false; // Gulf of Mexico
-        if (lat > 60 && lon < -140 && lat < 65) return false; // Alaska coastline
-        return true;
+    // Check WebGL support
+    try {
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+      if (!gl) {
+        setHasWebGL(false);
+        setIsLoading(false);
+        return;
       }
-      // Greenland
-      if (lat >= 60 && lat <= 83 && lon >= -55 && lon <= -18) return true;
-      // South America
-      if (lat >= -56 && lat <= 13 && lon >= -82 && lon <= -34) {
-        if (lon < -75 && lat < -22) return false;
-        return true;
-      }
-      // Europe (incl Iberia, Scandinavia)
-      if (lat >= 36 && lat <= 71 && lon >= -10 && lon <= 40) return true;
-      if (lat >= 55 && lat <= 71 && lon >= 15 && lon <= 30) return true; // Scandinavia east
-      // Africa
-      if (lat >= -35 && lat <= 37 && lon >= -18 && lon <= 52) {
-        if (lon > 43 && lat < 5) return false; // Indian Ocean inlet
-        return true;
-      }
-      // Middle East / Arabian Peninsula
-      if (lat >= 12 && lat <= 38 && lon >= 35 && lon <= 60) return true;
-      // Asia (mainland)
-      if (lat >= 5 && lat <= 77 && lon >= 45 && lon <= 145) {
-        if (lat < 20 && lon < 70 && lon > 55) return false; // Arabian Sea
-        if (lat < 10 && lon > 100) return false; // SE Asia water
-        return true;
-      }
-      // Southeast Asia islands
-      if (lat >= -8 && lat <= 20 && lon >= 95 && lon <= 127) return true;
-      // Japan archipelago
-      if (lat >= 30 && lat <= 45 && lon >= 130 && lon <= 145) return true;
-      // Taiwan
-      if (lat >= 22 && lat <= 25 && lon >= 120 && lon <= 122) return true;
-      // Sri Lanka
-      if (lat >= 6 && lat <= 10 && lon >= 79 && lon <= 82) return true;
-      // Australia
-      if (lat >= -45 && lat <= -10 && lon >= 113 && lon <= 154) {
-        if (lon > 137 && lat < -35) return false;
-        return true;
-      }
-      // New Zealand
-      if (lat >= -47 && lat <= -34 && lon >= 166 && lon <= 178) return true;
-      // British Isles
-      if (lat >= 50 && lat <= 59 && lon >= -8 && lon <= 2) return true;
-      // Iceland
-      if (lat >= 63 && lat <= 67 && lon >= -24 && lon <= -13) return true;
-      // Madagascar
-      if (lat >= -26 && lat <= -12 && lon >= 43 && lon <= 50) return true;
-
-      return false;
-    };
-
-    // ─── 4. High-Fidelity Continent Dot Map ─────────────────────────────────
-    // 14,000 samples → dense, realistic continent silhouettes
-    const totalSamples = 14000;
-    const landPoints: THREE.Vector3[] = [];
-    const colors: number[] = [];
-
-    // Premium color palette: warm continental whites + cool coastal blues
-    const continentCoreColor = new THREE.Color(0xd4dde8); // warm grey-white
-    const continentMidColor = new THREE.Color(0x8fa8c0);  // steel blue-grey
-    const coastalColor = new THREE.Color(0x4a9ede);       // medium blue
-    const coastalBrightColor = new THREE.Color(0x7ec8f0); // bright coastal
-
-    for (let i = 0; i < totalSamples; i++) {
-      const phi = Math.acos(1 - (2 * (i + 0.5)) / totalSamples);
-      const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-
-      const lat = 90 - (phi * 180) / Math.PI;
-      const lon = ((theta * 180) / Math.PI) % 360 - 180;
-
-      if (isLandCoordinate(lat, lon)) {
-        const pos = latLonToVector3(lat, lon, GLOBE_RADIUS + 0.03);
-        landPoints.push(pos);
-
-        const rand = Math.random();
-        let col: THREE.Color;
-        if (rand > 0.88) {
-          col = continentCoreColor;
-        } else if (rand > 0.65) {
-          col = continentMidColor;
-        } else if (rand > 0.35) {
-          col = coastalColor;
-        } else {
-          col = coastalBrightColor;
-        }
-        colors.push(col.r, col.g, col.b);
-      }
+    } catch {
+      setHasWebGL(false);
+      setIsLoading(false);
+      return;
     }
 
-    const pointsGeo = new THREE.BufferGeometry().setFromPoints(landPoints);
-    pointsGeo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+    const width = container.clientWidth || 600;
+    const height = container.clientHeight || 320;
 
-    const pointsMat = new THREE.PointsMaterial({
-      size: 0.065,
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.92,
-      blending: THREE.AdditiveBlending,
-      sizeAttenuation: true,
-    });
-    const continentPoints = new THREE.Points(pointsGeo, pointsMat);
-    globeRoot.add(continentPoints);
+    // ─── 1. Scene, Camera, Renderer ──────────────────────────────────────
+    const scene = new THREE.Scene();
 
-    // ─── 5. City Light Nodes — Nightside Urban Glow ────────────────────────
-    const MAJOR_CITIES = [
-      // North America
-      { lat: 40.7, lon: -74.0 },   // New York
-      { lat: 34.0, lon: -118.2 },  // Los Angeles
-      { lat: 41.8, lon: -87.6 },   // Chicago
-      { lat: 37.4, lon: -122.1 },  // Silicon Valley
-      { lat: 43.7, lon: -79.4 },   // Toronto
-      { lat: 19.4, lon: -99.1 },   // Mexico City
-      // Europe
-      { lat: 51.5, lon: -0.1 },    // London
-      { lat: 48.9, lon: 2.3 },     // Paris
-      { lat: 52.5, lon: 13.4 },    // Berlin
-      { lat: 41.9, lon: 12.5 },    // Rome
-      { lat: 40.4, lon: -3.7 },    // Madrid
-      { lat: 55.8, lon: 37.6 },    // Moscow
-      // Asia
-      { lat: 35.7, lon: 139.7 },   // Tokyo
-      { lat: 31.2, lon: 121.5 },   // Shanghai
-      { lat: 39.9, lon: 116.4 },   // Beijing
-      { lat: 22.5, lon: 114.1 },   // Hong Kong / Shenzhen
-      { lat: 1.35, lon: 103.8 },   // Singapore
-      { lat: 28.6, lon: 77.2 },    // New Delhi
-      { lat: 12.9, lon: 77.6 },    // Bengaluru
-      { lat: 19.1, lon: 72.9 },    // Mumbai
-      { lat: 37.6, lon: 127.0 },   // Seoul
-      { lat: 23.1, lon: 113.3 },   // Guangzhou
-      { lat: 25.2, lon: 55.3 },    // Dubai
-      // Africa & Oceania
-      { lat: -33.9, lon: 18.4 },   // Cape Town
-      { lat: -1.3, lon: 36.8 },    // Nairobi
-      { lat: -33.9, lon: 151.2 },  // Sydney
-      { lat: -37.8, lon: 144.9 },  // Melbourne
-      // South America
-      { lat: -23.5, lon: -46.6 },  // São Paulo
-      { lat: -34.6, lon: -58.4 },  // Buenos Aires
-      { lat: -12.0, lon: -77.0 },  // Lima
-    ];
+    // Field of view 34° gives a cinematic telephoto look (like from a satellite)
+    const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 1000);
+    // Adjust camera distance based on aspect ratio for commanding presence
+    const updateCameraDistance = (w: number, h: number) => {
+      const aspect = w / h;
+      if (aspect < 1.0) {
+        camera.position.z = 18.5; // Portrait mobile
+      } else if (aspect < 1.4) {
+        camera.position.z = 16.5; // Square / Tablet
+      } else {
+        camera.position.z = 15.0; // Widescreen desktop
+      }
+    };
+    updateCameraDistance(width, height);
+    camera.position.y = 0.3;
+    cameraRef.current = camera;
 
-    const cityLightsGroup = new THREE.Group();
-    globeRoot.add(cityLightsGroup);
-
-    MAJOR_CITIES.forEach((city) => {
-      const pos = latLonToVector3(city.lat, city.lon, GLOBE_RADIUS + 0.05);
-
-      // Core city node — bright warm white
-      const coreGeo = new THREE.SphereGeometry(0.055, 8, 8);
-      const coreCityMat = new THREE.MeshBasicMaterial({
-        color: 0xfff8e7,
-        transparent: true,
-        opacity: 0.95,
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance",
       });
-      const coreMesh = new THREE.Mesh(coreGeo, coreCityMat);
-      coreMesh.position.copy(pos);
-      cityLightsGroup.add(coreMesh);
+    } catch (e) {
+      console.warn("WebGL renderer creation failed", e);
+      setHasWebGL(false);
+      setIsLoading(false);
+      return;
+    }
 
-      // Outer glow halo — amber/orange warmth
-      const haloGeo = new THREE.SphereGeometry(0.14, 8, 8);
-      const haloMat = new THREE.MeshBasicMaterial({
-        color: 0xffb347,
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    container.appendChild(renderer.domElement);
+
+    const GLOBE_RADIUS = 4.8;
+    const globeRoot = new THREE.Group();
+    // Earth's natural 23.4° axial inclination
+    globeRoot.rotation.x = 0.22;
+    globeRoot.rotation.z = -0.08;
+    scene.add(globeRoot);
+    globeRootRef.current = globeRoot;
+
+    // ─── 2. Photorealistic Multi-Layer Earth Textures ────────────────────
+    const textureLoader = new THREE.TextureLoader();
+    let texturesLoadedCount = 0;
+    const totalTextures = 5;
+
+    const onTextureProgress = () => {
+      texturesLoadedCount++;
+      if (texturesLoadedCount >= 2) {
+        // As soon as base diffuse and lights are ready, show globe smoothly
+        setIsLoading(false);
+      }
+    };
+
+    const dayTexture = textureLoader.load("/textures/earth/earth_day.jpg", onTextureProgress);
+    const nightTexture = textureLoader.load("/textures/earth/earth_lights.png", onTextureProgress);
+    const specularTexture = textureLoader.load("/textures/earth/earth_specular.jpg", onTextureProgress);
+    const normalTexture = textureLoader.load("/textures/earth/earth_normal.jpg", onTextureProgress);
+    const cloudsTexture = textureLoader.load("/textures/earth/earth_clouds.png", onTextureProgress);
+
+    dayTexture.colorSpace = THREE.SRGBColorSpace;
+    nightTexture.colorSpace = THREE.SRGBColorSpace;
+    cloudsTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+    dayTexture.anisotropy = maxAnisotropy;
+    nightTexture.anisotropy = maxAnisotropy;
+    cloudsTexture.anisotropy = maxAnisotropy;
+
+    // ─── 3. Fixed Celestial Sun Light Direction ──────────────────────────
+    // Stationary sunlight in world space from upper-right
+    const sunDirection = new THREE.Vector3(14.0, 5.0, 11.0).normalize();
+
+    // ─── 4. Photorealistic Earth Surface Shader ──────────────────────────
+    const earthSurfaceGeo = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+    const earthSurfaceMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uDayMap: { value: dayTexture },
+        uNightMap: { value: nightTexture },
+        uSpecularMap: { value: specularTexture },
+        uSunDirection: { value: sunDirection },
+        uAtmosphereColor: { value: new THREE.Color(0x2f80ff) },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        varying vec3 vWorldPosition;
+
+        void main() {
+          vUv = uv;
+          vWorldNormal = normalize(mat3(modelMatrix) * normal);
+          vec4 worldPos = modelMatrix * vec4(position, 1.0);
+          vWorldPosition = worldPos.xyz;
+          gl_Position = projectionMatrix * viewMatrix * worldPos;
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D uDayMap;
+        uniform sampler2D uNightMap;
+        uniform sampler2D uSpecularMap;
+        uniform vec3 uSunDirection;
+        uniform vec3 uAtmosphereColor;
+
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        varying vec3 vWorldPosition;
+
+        void main() {
+          vec3 normal = normalize(vWorldNormal);
+          vec3 viewDir = normalize(cameraPosition - vWorldPosition);
+
+          // Day Diffuse Color
+          vec3 dayColor = texture2D(uDayMap, vUv).rgb;
+
+          // Night City Lights (warm amber-gold boost)
+          vec3 nightLights = texture2D(uNightMap, vUv).rgb;
+          nightLights = pow(nightLights, vec3(1.25)) * vec3(1.4, 1.15, 0.85) * 2.4;
+
+          // Ocean Specular Reflection
+          float specIntensity = texture2D(uSpecularMap, vUv).r;
+          vec3 halfVector = normalize(uSunDirection + viewDir);
+          float NdotH = max(dot(normal, halfVector), 0.0);
+          float specular = pow(NdotH, 36.0) * specIntensity * 1.6;
+          vec3 specColor = vec3(0.9, 0.95, 1.0) * specular;
+
+          // Sunlight calculation on surface
+          float NdotL = dot(normal, uSunDirection);
+          // Smooth day/night terminator transition
+          float dayFactor = smoothstep(-0.15, 0.22, NdotL);
+
+          // Daylight illumination (ambient + diffuse + specular)
+          float diffuse = max(NdotL, 0.0) * 0.88 + 0.12;
+          vec3 litDay = (dayColor * diffuse) + specColor;
+
+          // Night side: glowing cities + subtle planetary starlight
+          float nightFactor = 1.0 - dayFactor;
+          vec3 litNight = nightLights * nightFactor + (dayColor * 0.025);
+
+          // Blend Day & Night
+          vec3 surfaceColor = mix(litNight, litDay, dayFactor);
+
+          // Restrained atmospheric rim glow (Rayleigh scattering on limb)
+          float fresnel = 1.0 - max(dot(normal, viewDir), 0.0);
+          float rimGlow = pow(fresnel, 3.8) * 0.85;
+          // Sunlight boosts rim on the lit horizon
+          float sunRimBoost = max(dot(normal, uSunDirection), 0.0) * 0.5 + 0.5;
+          vec3 atmosphereGlow = uAtmosphereColor * rimGlow * sunRimBoost;
+
+          gl_FragColor = vec4(surfaceColor + atmosphereGlow, 1.0);
+        }
+      `,
+    });
+
+    const earthMesh = new THREE.Mesh(earthSurfaceGeo, earthSurfaceMat);
+    globeRoot.add(earthMesh);
+
+    // ─── 5. Realistic Cloud Sphere Layer ─────────────────────────────────
+    const cloudsGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.012, 64, 64);
+    const cloudsMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uCloudsMap: { value: cloudsTexture },
+        uSunDirection: { value: sunDirection },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        void main() {
+          vUv = uv;
+          vWorldNormal = normalize(mat3(modelMatrix) * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D uCloudsMap;
+        uniform vec3 uSunDirection;
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+
+        void main() {
+          vec4 cloudSample = texture2D(uCloudsMap, vUv);
+          float cloudDensity = cloudSample.r;
+
+          // Sunlight on clouds
+          float NdotL = dot(normalize(vWorldNormal), uSunDirection);
+          float sunLit = max(NdotL, 0.0) * 0.85 + 0.15;
+          float dayFade = smoothstep(-0.2, 0.15, NdotL);
+
+          // High clouds catch sunlight brightly, dark side softly fades
+          vec3 cloudColor = vec3(0.96, 0.98, 1.0) * sunLit;
+          float alpha = cloudDensity * 0.70 * (dayFade * 0.85 + 0.15);
+
+          gl_FragColor = vec4(cloudColor, alpha);
+        }
+      `,
+      transparent: true,
+      blending: THREE.NormalBlending,
+      depthWrite: false,
+    });
+
+    const cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+    globeRoot.add(cloudsMesh);
+
+    // ─── 6. Atmospheric Rayleigh Scattering Halo ─────────────────────────
+    const atmoGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.15, 64, 64);
+    const atmoMat = new THREE.ShaderMaterial({
+      uniforms: {
+        uSunDirection: { value: sunDirection },
+        uAtmosphereColor: { value: new THREE.Color(0x2f80ff) },
+      },
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 uAtmosphereColor;
+        varying vec3 vNormal;
+
+        void main() {
+          // Thin electric blue atmosphere rim seen from orbital distance
+          float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.8);
+          gl_FragColor = vec4(uAtmosphereColor, 1.0) * intensity * 1.35;
+        }
+      `,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide,
+      transparent: true,
+      depthWrite: false,
+    });
+
+    const atmoMesh = new THREE.Mesh(atmoGeo, atmoMat);
+    globeRoot.add(atmoMesh);
+
+    // ─── 7. Global Tech Radar Hub Markers ────────────────────────────────
+    const hubsGroup = new THREE.Group();
+    globeRoot.add(hubsGroup);
+
+    interface HubObject {
+      hub: TechHub;
+      pos: THREE.Vector3;
+      coreMesh: THREE.Mesh;
+      ringMesh: THREE.Mesh;
+      hitMesh: THREE.Mesh;
+    }
+
+    const hubObjects: HubObject[] = [];
+    const hitMeshes: THREE.Mesh[] = [];
+
+    // Subtle connecting data corridors
+    const hubPositionsMap: Record<string, THREE.Vector3> = {};
+
+    TECH_HUBS.forEach((hub) => {
+      const pos = latLonToVector3(hub.lat, hub.lon, GLOBE_RADIUS + 0.04);
+      hubPositionsMap[hub.id] = pos;
+
+      // 1. Core Glowing Hub Marker
+      const coreGeo = new THREE.SphereGeometry(0.07, 12, 12);
+      const coreMat = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8,
+      });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      coreMesh.position.copy(pos);
+      hubsGroup.add(coreMesh);
+
+      // 2. Pulsing Radar Ping Ring
+      const ringGeo = new THREE.RingGeometry(0.06, 0.13, 24);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x2f80ff,
+        side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.22,
+        opacity: 0.8,
         blending: THREE.AdditiveBlending,
       });
-      const haloMesh = new THREE.Mesh(haloGeo, haloMat);
-      haloMesh.position.copy(pos);
-      cityLightsGroup.add(haloMesh);
+      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.position.copy(pos.clone().multiplyScalar(1.002));
+      ringMesh.lookAt(pos.clone().multiplyScalar(2.0));
+      hubsGroup.add(ringMesh);
+
+      // 3. Invisible Hit Target for accurate Raycasting
+      const hitGeo = new THREE.SphereGeometry(0.32, 8, 8);
+      const hitMat = new THREE.MeshBasicMaterial({
+        visible: false,
+      });
+      const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+      hitMesh.position.copy(pos);
+      hitMesh.userData = { hub };
+      hubsGroup.add(hitMesh);
+      hitMeshes.push(hitMesh);
+
+      hubObjects.push({ hub, pos, coreMesh, ringMesh, hitMesh });
     });
 
-    // ─── 6. Tech Hub Network Arcs (refined, subtle) ─────────────────────────
-    const TECH_HUBS = [
-      { lat: 37.4, lon: -122.1 },  // Silicon Valley
-      { lat: 40.7, lon: -74.0 },   // New York
-      { lat: 51.5, lon: -0.1 },    // London
-      { lat: 48.9, lon: 2.3 },     // Paris
-      { lat: 35.7, lon: 139.7 },   // Tokyo
-      { lat: 12.9, lon: 77.6 },    // Bengaluru
-      { lat: 1.35, lon: 103.8 },   // Singapore
-      { lat: -33.9, lon: 151.2 },  // Sydney
-      { lat: 22.5, lon: 114.1 },   // Shenzhen
-    ];
-
-    const hubPositions: THREE.Vector3[] = TECH_HUBS.map((hub) =>
-      latLonToVector3(hub.lat, hub.lon, GLOBE_RADIUS + 0.06)
-    );
-
-    const arcConnections = [
-      [0, 1], [1, 2], [2, 3], [2, 4],
-      [4, 8], [8, 6], [6, 5], [0, 4], [6, 7],
+    // ─── 8. Tech Network Orbital Arcs ────────────────────────────────────
+    const TECH_CORRIDORS: [string, string][] = [
+      ["sf", "tokyo"],
+      ["sf", "london"],
+      ["london", "zurich"],
+      ["london", "bengaluru"],
+      ["bengaluru", "singapore"],
+      ["singapore", "taipei"],
+      ["taipei", "tokyo"],
+      ["sf", "boston"],
     ];
 
     const arcsGroup = new THREE.Group();
     globeRoot.add(arcsGroup);
 
-    interface PulseData {
+    interface DataPulse {
       curve: THREE.QuadraticBezierCurve3;
       mesh: THREE.Mesh;
       speed: number;
       progress: number;
     }
-    const pulsePulses: PulseData[] = [];
+    const dataPulses: DataPulse[] = [];
 
-    const pulseGeom = new THREE.SphereGeometry(0.045, 6, 6);
+    const pulseGeo = new THREE.SphereGeometry(0.04, 6, 6);
     const pulseMat = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: 0x7dd3fc,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.9,
     });
 
-    arcConnections.forEach(([i, j]) => {
-      const p1 = hubPositions[i];
-      const p2 = hubPositions[j];
+    TECH_CORRIDORS.forEach(([startId, endId]) => {
+      const p1 = hubPositionsMap[startId];
+      const p2 = hubPositionsMap[endId];
+      if (!p1 || !p2) return;
+
       const mid = new THREE.Vector3().addVectors(p1, p2).multiplyScalar(0.5);
       const distance = p1.distanceTo(p2);
-      const lift = Math.min(distance * 0.3, 2.0);
-      const midArc = mid.clone().normalize().multiplyScalar(GLOBE_RADIUS + lift);
+      const altitude = Math.min(distance * 0.22, 1.4);
+      const midArc = mid.clone().normalize().multiplyScalar(GLOBE_RADIUS + altitude);
 
       const curve = new THREE.QuadraticBezierCurve3(p1, midArc, p2);
-      const points = curve.getPoints(50);
+      const points = curve.getPoints(45);
       const curveGeo = new THREE.BufferGeometry().setFromPoints(points);
 
       const curveMat = new THREE.LineBasicMaterial({
-        color: 0x4a9ede,
+        color: 0x2f80ff,
         transparent: true,
-        opacity: 0.28,
+        opacity: 0.22,
       });
       const arcLine = new THREE.Line(curveGeo, curveMat);
       arcsGroup.add(arcLine);
 
-      const pulseMesh = new THREE.Mesh(pulseGeom, pulseMat);
+      // Packet
+      const pulseMesh = new THREE.Mesh(pulseGeo, pulseMat);
       arcsGroup.add(pulseMesh);
-      pulsePulses.push({
+      dataPulses.push({
         curve,
         mesh: pulseMesh,
-        speed: 0.1 + Math.random() * 0.1,
+        speed: 0.12 + Math.random() * 0.08,
         progress: Math.random(),
       });
     });
 
-    // ─── 7. Three-Layer Realistic Atmosphere ────────────────────────────────
-
-    // Layer A: Outer deep-space fade (very subtle blue haze)
-    const atmoOuterGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.22, 48, 48);
-    const atmoOuterMat = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vNormal;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vNormal;
-        void main() {
-          float intensity = pow(0.55 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.2);
-          gl_FragColor = vec4(0.05, 0.30, 0.65, 1.0) * intensity * 1.2;
-        }
-      `,
-      blending: THREE.AdditiveBlending,
-      side: THREE.BackSide,
-      transparent: true,
-    });
-    const atmoOuter = new THREE.Mesh(atmoOuterGeo, atmoOuterMat);
-    globeRoot.add(atmoOuter);
-
-    // Layer B: Mid-atmosphere cobalt blue scatter band
-    const atmoMidGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.12, 48, 48);
-    const atmoMidMat = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vNormal;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vNormal;
-        void main() {
-          float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.4);
-          gl_FragColor = vec4(0.08, 0.50, 0.92, 1.0) * intensity * 1.8;
-        }
-      `,
-      blending: THREE.AdditiveBlending,
-      side: THREE.BackSide,
-      transparent: true,
-    });
-    const atmoMid = new THREE.Mesh(atmoMidGeo, atmoMidMat);
-    globeRoot.add(atmoMid);
-
-    // Layer C: Inner warm limb glow (sunrise/terminator rim)
-    const atmoInnerGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.05, 48, 48);
-    const atmoInnerMat = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vNormal;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vNormal;
-        void main() {
-          float rim = 1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0)));
-          float intensity = pow(rim, 4.5) * 0.9;
-          // Warm sunrise orange-white on the terminator
-          vec3 warmColor = vec3(0.85, 0.55, 0.20);
-          vec3 coolColor = vec3(0.15, 0.55, 0.95);
-          vec3 finalColor = mix(coolColor, warmColor, pow(rim, 6.0));
-          gl_FragColor = vec4(finalColor, 1.0) * intensity;
-        }
-      `,
-      blending: THREE.AdditiveBlending,
-      side: THREE.BackSide,
-      transparent: true,
-    });
-    const atmoInner = new THREE.Mesh(atmoInnerGeo, atmoInnerMat);
-    globeRoot.add(atmoInner);
-
-    // ─── 8. Subtle Equatorial Depth Ring (very faint, for spatial grounding) ─
-    const eqRingGeo = new THREE.TorusGeometry(GLOBE_RADIUS * 1.35, 0.012, 12, 160);
-    const eqRingMat = new THREE.MeshBasicMaterial({
-      color: 0x4a9ede,
-      transparent: true,
-      opacity: 0.07,
-    });
-    const eqRing = new THREE.Mesh(eqRingGeo, eqRingMat);
-    eqRing.rotation.x = Math.PI / 2;
-    globeRoot.add(eqRing);
-
-    // ─── 9. Scene Lighting for the Earth Sphere ──────────────────────────────
-    const sunLight = new THREE.DirectionalLight(0xfff5e0, 2.2);
-    sunLight.position.set(12, 4, 10);
-    scene.add(sunLight);
-
-    const fillLight = new THREE.AmbientLight(0x080c20, 0.8);
-    scene.add(fillLight);
-
-    const rimLight = new THREE.PointLight(0x1a6fa8, 1.5, 35);
-    rimLight.position.set(-10, 3, -8);
-    scene.add(rimLight);
-
-    // ─── 10. Deep Space Star Field ──────────────────────────────────────────
-    const starCount = 500;
+    // ─── 9. Distant Celestial Stars ──────────────────────────────────────
+    const starCount = 380;
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
 
-    const starWhite = new THREE.Color(0xffffff);
-    const starBlue = new THREE.Color(0xc8dfff);
-    const starWarm = new THREE.Color(0xfff8dc);
-
-    for (let s = 0; s < starCount * 3; s += 3) {
-      const r = 38 + Math.random() * 15;
+    for (let i = 0; i < starCount; i++) {
+      const i3 = i * 3;
+      const r = 35 + Math.random() * 20;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
-      starPositions[s] = r * Math.sin(phi) * Math.cos(theta);
-      starPositions[s + 1] = r * Math.sin(phi) * Math.sin(theta);
-      starPositions[s + 2] = r * Math.cos(phi);
+      starPositions[i3] = r * Math.sin(phi) * Math.cos(theta);
+      starPositions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      starPositions[i3 + 2] = r * Math.cos(phi);
 
-      const col = Math.random() > 0.7 ? starBlue : Math.random() > 0.4 ? starWhite : starWarm;
-      starColors[s] = col.r;
-      starColors[s + 1] = col.g;
-      starColors[s + 2] = col.b;
+      const isBlue = Math.random() > 0.65;
+      starColors[i3] = isBlue ? 0.75 : 0.95;
+      starColors[i3 + 1] = isBlue ? 0.85 : 0.95;
+      starColors[i3 + 2] = 1.0;
     }
 
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
-    starGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
+    const starsGeo = new THREE.BufferGeometry();
+    starsGeo.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
+    starsGeo.setAttribute("color", new THREE.BufferAttribute(starColors, 3));
 
-    const starMat = new THREE.PointsMaterial({
-      size: 0.12,
+    const starsMat = new THREE.PointsMaterial({
+      size: 0.1,
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.65,
       sizeAttenuation: true,
     });
-    const stars = new THREE.Points(starGeo, starMat);
+    const stars = new THREE.Points(starsGeo, starsMat);
     scene.add(stars);
 
-    // ─── Mouse Tracking ──────────────────────────────────────────────────────
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
+    // ─── 10. Smooth Orbit Drag & Touch Controls ──────────────────────────
+    let isDragging = false;
+    let previousPointerX = 0;
+    let previousPointerY = 0;
+    let rotationVelocityX = 0;
+    let rotationVelocityY = 0.0016; // Initial gentle rotation
+    let lastInteractionTime = 0;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-      const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-      targetX = x * 0.28;
-      targetY = -y * 0.22;
-      setMousePos({ x, y });
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+
+    const getPointerPos = (e: MouseEvent | TouchEvent): { clientX: number; clientY: number } => {
+      if ("touches" in e) {
+        return {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY,
+        };
+      }
+      return { clientX: e.clientX, clientY: e.clientY };
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      const pos = getPointerPos(e);
+      isDragging = true;
+      setIsInteracting(true);
+      previousPointerX = pos.clientX;
+      previousPointerY = pos.clientY;
+      rotationVelocityX = 0;
+      rotationVelocityY = 0;
+      lastInteractionTime = Date.now();
+    };
 
-    // ─── Resize Handler ──────────────────────────────────────────────────────
+    const handlePointerMove = (e: MouseEvent | TouchEvent) => {
+      const rect = container.getBoundingClientRect();
+      const pos = getPointerPos(e);
+
+      // Update pointer for raycaster
+      pointer.x = ((pos.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((pos.clientY - rect.top) / rect.height) * 2 + 1;
+
+      if (isDragging) {
+        const deltaX = pos.clientX - previousPointerX;
+        const deltaY = pos.clientY - previousPointerY;
+
+        rotationVelocityY = deltaX * 0.006;
+        rotationVelocityX = deltaY * 0.004;
+
+        globeRoot.rotation.y += rotationVelocityY;
+        // Clamp tilt so earth doesn't flip upside down
+        globeRoot.rotation.x = Math.max(-0.6, Math.min(0.8, globeRoot.rotation.x + rotationVelocityX));
+
+        previousPointerX = pos.clientX;
+        previousPointerY = pos.clientY;
+        lastInteractionTime = Date.now();
+      } else {
+        // Raycast check for tech hubs when not dragging
+        raycaster.setFromCamera(pointer, camera);
+        const intersects = raycaster.intersectObjects(hitMeshes, false);
+
+        if (intersects.length > 0) {
+          const hit = intersects[0].object.userData.hub as TechHub;
+          setHoveredHub(hit);
+          container.style.cursor = "pointer";
+
+          // Calculate screen position for tooltip
+          const worldPos = new THREE.Vector3();
+          intersects[0].object.getWorldPosition(worldPos);
+          // Check if hub is facing the camera (not around the back of Earth)
+          const camDir = new THREE.Vector3().subVectors(camera.position, worldPos).normalize();
+          const normal = worldPos.clone().normalize();
+          if (camDir.dot(normal) > 0.1) {
+            worldPos.project(camera);
+            const x = ((worldPos.x + 1) * rect.width) / 2;
+            const y = ((-worldPos.y + 1) * rect.height) / 2;
+            setHubScreenPos({ x, y });
+            activeHubPosRef.current = worldPos;
+          } else {
+            setHoveredHub(null);
+            setHubScreenPos(null);
+          }
+        } else {
+          setHoveredHub(null);
+          setHubScreenPos(null);
+          container.style.cursor = "grab";
+        }
+      }
+    };
+
+    const handlePointerUp = (e: MouseEvent | TouchEvent) => {
+      if (!isDragging) return;
+      isDragging = false;
+      setIsInteracting(false);
+
+      // If it was a clean tap without dragging, check for hub selection
+      const deltaFromStart = Math.hypot(rotationVelocityX, rotationVelocityY);
+      if (deltaFromStart < 0.002) {
+        raycaster.setFromCamera(pointer, camera);
+        const intersects = raycaster.intersectObjects(hitMeshes, false);
+        if (intersects.length > 0) {
+          const hit = intersects[0].object.userData.hub as TechHub;
+          setSelectedHub(hit);
+          onSelectDomain(hit.domain);
+        }
+      }
+    };
+
+    // Attach interaction listeners
+    container.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("mousemove", handlePointerMove);
+    window.addEventListener("mouseup", handlePointerUp);
+
+    container.addEventListener("touchstart", handlePointerDown, { passive: true });
+    window.addEventListener("touchmove", handlePointerMove, { passive: true });
+    window.addEventListener("touchend", handlePointerUp);
+
+    // ─── 11. Responsive Resize Observer ──────────────────────────────────
     const handleResize = () => {
       if (!container) return;
       const w = container.clientWidth;
       const h = container.clientHeight;
       camera.aspect = w / h;
+      updateCameraDistance(w, h);
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
 
-    const resizeObserver = new ResizeObserver(() => handleResize());
+    const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
 
-    // ─── Animation Loop ──────────────────────────────────────────────────────
+    // ─── 12. Main Render Loop ────────────────────────────────────────────
     let animId: number;
     const clock = new THREE.Clock();
 
@@ -492,217 +691,239 @@ export const HeroGlobe3D: React.FC<HeroGlobe3DProps> = ({ onSelectDomain }) => {
       const delta = clock.getDelta();
       const elapsed = clock.getElapsedTime();
 
-      // Smooth lerped mouse parallax
-      currentX += (targetX - currentX) * 0.045;
-      currentY += (targetY - currentY) * 0.045;
+      // Inertia & Auto-Rotation
+      if (!isDragging) {
+        // Friction damping on user fling
+        rotationVelocityY *= 0.94;
+        rotationVelocityX *= 0.94;
 
-      // Deliberate slow rotation — premium, not frantic
-      globeRoot.rotation.y = elapsed * 0.045 + currentX;
-      globeRoot.rotation.x = 0.24 + currentY;
+        // Auto-resume gentle majestic rotation after 1.8s of inactivity
+        if (Date.now() - lastInteractionTime > 1800) {
+          const idleSpeed = 0.0014;
+          rotationVelocityY += (idleSpeed - rotationVelocityY) * 0.03;
+        }
 
-      // Subtle equatorial ring pulse
-      eqRing.rotation.z = elapsed * 0.02;
+        globeRoot.rotation.y += rotationVelocityY;
+        globeRoot.rotation.x = Math.max(-0.6, Math.min(0.8, globeRoot.rotation.x + rotationVelocityX));
+      }
 
-      // Data pulse packets along arcs
-      pulsePulses.forEach((pulse) => {
-        pulse.progress += pulse.speed * delta;
-        if (pulse.progress > 1) pulse.progress = 0;
-        const currentPos = pulse.curve.getPoint(pulse.progress);
-        pulse.mesh.position.copy(currentPos);
+      // Independent orbital cloud drift (slightly faster than planet)
+      cloudsMesh.rotation.y = globeRoot.rotation.y * 1.08 + elapsed * 0.008;
+
+      // Pulse Radar Rings
+      hubObjects.forEach((obj, idx) => {
+        const pulse = 1.0 + Math.sin(elapsed * 3.5 + idx * 0.8) * 0.45;
+        obj.ringMesh.scale.set(pulse, pulse, pulse);
+        const mat = obj.ringMesh.material as THREE.MeshBasicMaterial;
+        mat.opacity = 0.85 - (pulse - 1.0) * 0.6;
       });
 
-      // Gentle star field drift
-      stars.rotation.y = elapsed * 0.004;
+      // Travel pulses along data corridors
+      dataPulses.forEach((dp) => {
+        dp.progress += dp.speed * delta;
+        if (dp.progress > 1) dp.progress = 0;
+        const pos = dp.curve.getPoint(dp.progress);
+        dp.mesh.position.copy(pos);
+      });
+
+      // Background stars slow drift
+      stars.rotation.y = elapsed * 0.002;
+
+      // Update screen position of hovered hub if active
+      if (hoveredHub && container) {
+        const hubObj = hubObjects.find((h) => h.hub.id === hoveredHub.id);
+        if (hubObj) {
+          const worldPos = new THREE.Vector3();
+          hubObj.hitMesh.getWorldPosition(worldPos);
+
+          const camDir = new THREE.Vector3().subVectors(camera.position, worldPos).normalize();
+          const normal = worldPos.clone().normalize();
+
+          // Hide if rotated to back side
+          if (camDir.dot(normal) > 0.05) {
+            worldPos.project(camera);
+            const rect = container.getBoundingClientRect();
+            const x = ((worldPos.x + 1) * rect.width) / 2;
+            const y = ((-worldPos.y + 1) * rect.height) / 2;
+            setHubScreenPos({ x, y });
+          } else {
+            setHoveredHub(null);
+            setHubScreenPos(null);
+          }
+        }
+      }
 
       renderer.render(scene, camera);
     };
 
     animate();
 
-    // ─── Cleanup ──────────────────────────────────────────────────────────────
+    // ─── Cleanup ─────────────────────────────────────────────────────────
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
+      container.removeEventListener("touchstart", handlePointerDown);
+      window.removeEventListener("touchmove", handlePointerMove);
+      window.removeEventListener("touchend", handlePointerUp);
       resizeObserver.disconnect();
       cancelAnimationFrame(animId);
-      if (container && renderer.domElement) {
+
+      if (container && renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
       renderer.dispose();
-      coreGeo.dispose();
-      coreMat.dispose();
-      pointsGeo.dispose();
-      pointsMat.dispose();
-      atmoOuterGeo.dispose();
-      atmoOuterMat.dispose();
-      atmoMidGeo.dispose();
-      atmoMidMat.dispose();
-      atmoInnerGeo.dispose();
-      atmoInnerMat.dispose();
-      eqRingGeo.dispose();
-      eqRingMat.dispose();
-      starGeo.dispose();
-      starMat.dispose();
+      earthSurfaceGeo.dispose();
+      earthSurfaceMat.dispose();
+      cloudsGeo.dispose();
+      cloudsMat.dispose();
+      atmoGeo.dispose();
+      atmoMat.dispose();
+      dayTexture.dispose();
+      nightTexture.dispose();
+      specularTexture.dispose();
+      normalTexture.dispose();
+      cloudsTexture.dispose();
+      starsGeo.dispose();
+      starsMat.dispose();
     };
+  }, [onSelectDomain]);
+
+  // Reset to default angle
+  const handleResetOrientation = useCallback(() => {
+    if (!globeRootRef.current) return;
+    globeRootRef.current.rotation.x = 0.22;
+    globeRootRef.current.rotation.y = 0;
   }, []);
 
   return (
-    <div className="relative w-full h-[480px] sm:h-[550px] lg:h-[620px] flex items-center justify-center select-none">
-      {/* WebGL Canvas */}
+    <div className="relative w-full h-full min-h-[280px] sm:min-h-[320px] flex items-center justify-center select-none overflow-hidden touch-none">
+      {/* 3D WebGL Canvas Container */}
       <div
         ref={mountRef}
-        className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none"
+        className={`w-full h-full absolute inset-0 cursor-grab active:cursor-grabbing transition-opacity duration-700 ${
+          isLoading ? "opacity-0" : "opacity-100"
+        }`}
+        style={{ touchAction: "none" }}
       />
 
-      {/* Deep radial bloom behind Earth */}
-      <div className="absolute w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full pointer-events-none -z-10"
+      {/* Loading Skeleton */}
+      {isLoading && hasWebGL && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#08090B]">
+          <div className="w-16 h-16 rounded-full border border-sky-500/20 border-t-sky-400 animate-spin" />
+          <div className="text-[10px] font-mono tracking-widest text-[#70737A] uppercase flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
+            <span>CALIBRATING ORBITAL TELEMETRY...</span>
+          </div>
+        </div>
+      )}
+
+      {/* Fallback if WebGL is unavailable */}
+      {!hasWebGL && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#08090B]">
+          <Globe2 className="w-12 h-12 text-[#2F80FF]/60 mb-2 animate-pulse" />
+          <p className="text-xs font-mono text-[#F5F5F5] font-bold">GLOBAL TECH RADAR</p>
+          <p className="text-[10px] font-mono text-[#70737A] mt-1">
+            Orbital radar requires WebGL acceleration.
+          </p>
+          <div className="mt-3 flex flex-wrap justify-center gap-1.5">
+            {TECH_HUBS.slice(0, 4).map((h) => (
+              <button
+                key={h.id}
+                onClick={() => onSelectDomain(h.domain)}
+                className="px-2.5 py-1 rounded text-[10px] font-mono bg-[#111317] border border-[#202328] text-[#2F80FF] hover:border-[#2F80FF]"
+              >
+                {h.name} · {h.domain}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Deep Celestial Blue Ambient Glow behind Earth */}
+      <div
+        className="absolute w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] rounded-full pointer-events-none -z-10"
         style={{
-          background: "radial-gradient(ellipse, rgba(14,100,200,0.1) 0%, rgba(14,100,200,0.04) 40%, transparent 70%)",
+          background:
+            "radial-gradient(ellipse at center, rgba(30,100,220,0.18) 0%, rgba(14,60,140,0.06) 45%, transparent 75%)",
         }}
       />
 
-      {/* Telemetry label — top center */}
-      <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-sky-400/70 bg-black/50 px-3 py-1 rounded-full border border-sky-500/15 backdrop-blur-md pointer-events-none z-20">
-        <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-pulse" />
-        <span>GLOBAL TECH NETWORK — LIVE</span>
+      {/* Top HUD Strip */}
+      <div className="absolute top-2.5 left-3 right-3 flex items-center justify-between pointer-events-none z-20">
+        <div className="flex items-center gap-1.5 text-[9px] font-mono tracking-widest text-sky-400/80 bg-[#08090B]/85 px-2.5 py-1 rounded border border-[#202328] backdrop-blur-sm shadow-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-400 animate-ping" />
+          <span>RADAR ORBIT · 8 GLOBAL HUBS</span>
+        </div>
+
+        <button
+          onClick={handleResetOrientation}
+          aria-label="Reset orientation"
+          className="pointer-events-auto flex items-center gap-1 text-[9px] font-mono text-[#70737A] hover:text-[#F5F5F5] bg-[#08090B]/85 px-2 py-1 rounded border border-[#202328] hover:border-[#2F80FF] backdrop-blur-sm transition-colors"
+        >
+          <RotateCcw className="w-2.5 h-2.5" />
+          <span className="hidden xs:inline">RESET</span>
+        </button>
       </div>
 
-      {/* Side labels */}
-      <div className="absolute left-1 top-1/2 -translate-y-1/2 -rotate-90 hidden sm:flex items-center gap-1 text-[9px] font-mono tracking-widest text-slate-500/70 pointer-events-none z-20">
-        <span>LAT 37.4°N</span>
-        <span className="text-sky-500/60 font-bold">•</span>
-        <span>SILICON VALLEY</span>
-      </div>
+      {/* Bottom Telemetry HUD */}
+      <div className="absolute bottom-2 left-3 right-3 flex items-center justify-between pointer-events-none z-20 text-[9px] font-mono text-[#70737A]">
+        <div className="flex items-center gap-2 bg-[#08090B]/80 px-2 py-0.5 rounded border border-[#202328]/60 backdrop-blur-sm">
+          <span className="text-sky-400">TOUCH / DRAG</span>
+          <span>TO ROTATE</span>
+        </div>
 
-      <div className="absolute right-1 top-1/2 -translate-y-1/2 rotate-90 hidden sm:flex items-center gap-1 text-[9px] font-mono tracking-widest text-slate-500/70 pointer-events-none z-20">
-        <span>NEXBYTEES</span>
-        <span className="text-sky-500/60 font-bold">•</span>
-        <span>CONNECTED</span>
-      </div>
-
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[9px] font-mono tracking-widest text-slate-500/60 pointer-events-none z-20">
-        <span>EARTH — 30 CITIES — {new Date().getFullYear()}</span>
-      </div>
-
-      {/* SVG connection lines — Earth to cards */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none z-10"
-        viewBox="0 0 600 600"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4a9ede" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#4a9ede" stopOpacity="0.0" />
-          </linearGradient>
-          <linearGradient id="lg2" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#4a9ede" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="#4a9ede" stopOpacity="0.0" />
-          </linearGradient>
-        </defs>
-        <path d="M 170 130 C 230 175, 258 215, 282 265" stroke="url(#lg1)" strokeWidth="1" strokeDasharray="4 4" />
-        <path d="M 430 130 C 370 175, 342 215, 318 265" stroke="url(#lg2)" strokeWidth="1" strokeDasharray="4 4" />
-        <path d="M 170 470 C 228 422, 258 378, 282 335" stroke="url(#lg1)" strokeWidth="1" strokeDasharray="4 4" />
-        <path d="M 430 470 C 372 422, 342 378, 318 335" stroke="url(#lg2)" strokeWidth="1" strokeDasharray="4 4" />
-      </svg>
-
-      {/* FOUR DOMAIN EDITORIAL BADGES */}
-
-      {/* TOP-LEFT: AI */}
-      <div
-        onClick={() => onSelectDomain("Artificial Intelligence")}
-        style={{
-          transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * -8}px, 0)`,
-          transition: "transform 0.18s ease-out",
-        }}
-        className="absolute top-8 sm:top-12 left-1.5 sm:left-4 z-20 cursor-pointer group"
-      >
-        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
-          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
-            <Brain className="w-3.5 h-3.5" />
-          </div>
-          <div>
-            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
-              AI DESK
-            </div>
-            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
-              INTELLIGENCE
-            </div>
-          </div>
+        <div className="flex items-center gap-2 bg-[#08090B]/80 px-2 py-0.5 rounded border border-[#202328]/60 backdrop-blur-sm">
+          <span>DAY / NIGHT TERMINATOR</span>
+          <span className="text-emerald-400 font-bold">•</span>
+          <span className="text-[#F5F5F5]">ACTIVE</span>
         </div>
       </div>
 
-      {/* TOP-RIGHT: ROBOTICS */}
-      <div
-        onClick={() => onSelectDomain("Robotics")}
-        style={{
-          transform: `translate3d(${mousePos.x * 10}px, ${mousePos.y * -8}px, 0)`,
-          transition: "transform 0.18s ease-out",
-        }}
-        className="absolute top-8 sm:top-12 right-1.5 sm:right-4 z-20 cursor-pointer group"
-      >
-        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
-          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
-            <Bot className="w-3.5 h-3.5" />
-          </div>
-          <div>
-            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
-              ROBOTICS
+      {/* Interactive Tooltip / Badge for Hovered Hub */}
+      {hoveredHub && hubScreenPos && (
+        <div
+          style={{
+            position: "absolute",
+            left: `${hubScreenPos.x}px`,
+            top: `${hubScreenPos.y - 12}px`,
+            transform: "translate(-50%, -100%)",
+            pointerEvents: "auto",
+          }}
+          onClick={() => onSelectDomain(hoveredHub.domain)}
+          className="z-30 cursor-pointer animate-in fade-in zoom-in-95 duration-150"
+        >
+          <div className="group relative flex flex-col gap-1 p-2.5 min-w-[170px] rounded-md bg-[#0B0D11]/95 border border-[#2F80FF] shadow-2xl backdrop-blur-md hover:bg-[#11141A] transition-all">
+            {/* Header */}
+            <div className="flex items-center justify-between gap-2 border-b border-[#202328] pb-1">
+              <div className="flex items-center gap-1 text-[9px] font-mono text-[#2F80FF] font-bold uppercase tracking-wider">
+                <Radio className="w-3 h-3 text-[#2F80FF] animate-pulse" />
+                <span>{hoveredHub.name}</span>
+              </div>
+              <span className="text-[8px] font-mono text-[#70737A] uppercase">
+                {hoveredHub.country}
+              </span>
             </div>
-            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
-              AUTONOMY
-            </div>
-          </div>
-        </div>
-      </div>
 
-      {/* BOTTOM-LEFT: QUANTUM */}
-      <div
-        onClick={() => onSelectDomain("Quantum Computing")}
-        style={{
-          transform: `translate3d(${mousePos.x * -10}px, ${mousePos.y * 10}px, 0)`,
-          transition: "transform 0.18s ease-out",
-        }}
-        className="absolute bottom-6 sm:bottom-12 left-1.5 sm:left-4 z-20 cursor-pointer group hidden sm:block"
-      >
-        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
-          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
-            <Atom className="w-3.5 h-3.5" />
-          </div>
-          <div>
-            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
-              QUANTUM
+            {/* Specialty / Domain */}
+            <div className="text-[11px] font-sans font-bold text-[#F5F5F5] group-hover:text-[#2F80FF] transition-colors leading-tight">
+              {hoveredHub.domain}
             </div>
-            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
-              PHYSICS & LATTICE
+            <div className="text-[9px] font-mono text-[#A7A9AD]">
+              {hoveredHub.specialty}
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* BOTTOM-RIGHT: SPACE */}
-      <div
-        onClick={() => onSelectDomain("Space Technology")}
-        style={{
-          transform: `translate3d(${mousePos.x * 10}px, ${mousePos.y * 10}px, 0)`,
-          transition: "transform 0.18s ease-out",
-        }}
-        className="absolute bottom-6 sm:bottom-12 right-1.5 sm:right-4 z-20 cursor-pointer group hidden sm:block"
-      >
-        <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-md bg-[#0B0D10]/90 border border-[#202328] backdrop-blur-md shadow-xl hover:border-[#2F80FF] hover:bg-[#111317] transition-all duration-200">
-          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-sm bg-[#111317] border border-[#202328] flex items-center justify-center text-[#2F80FF] group-hover:border-[#2F80FF] transition-colors flex-shrink-0">
-            <Rocket className="w-3.5 h-3.5" />
-          </div>
-          <div>
-            <div className="text-[11px] sm:text-xs font-bold text-[#F5F5F5] uppercase tracking-wider font-mono leading-none">
-              SPACE
+            {/* Action Callout */}
+            <div className="mt-1 pt-1 border-t border-[#202328]/70 flex items-center justify-between text-[9px] font-mono text-[#2F80FF]">
+              <span>Filter coverage</span>
+              <ExternalLink className="w-2.5 h-2.5" />
             </div>
-            <div className="text-[9px] text-[#70737A] font-mono mt-0.5 hidden xs:block">
-              ORBITAL SYSTEMS
-            </div>
+
+            {/* Downward indicator triangle */}
+            <div className="absolute left-1/2 -bottom-1.5 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-[#2F80FF]" />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

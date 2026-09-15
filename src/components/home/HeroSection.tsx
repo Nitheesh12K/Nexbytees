@@ -211,7 +211,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               </div>
 
-              <div className="relative w-full h-[220px] flex items-center justify-center overflow-hidden rounded bg-[#08090B] border border-[#1A1D23]">
+              <div className="relative w-full h-[300px] sm:h-[340px] flex items-center justify-center overflow-hidden rounded bg-[#08090B] border border-[#1A1D23]">
                 <HeroGlobe3D onSelectDomain={onSelectDomain} />
               </div>
 
